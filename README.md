@@ -27,10 +27,10 @@ Ideally use bookdown, integrate renv, use slido, and add drake.
 
 ## Recommended reading
 
-Boehmke, B., & Greenwell, B. M. (2019). Hands-On Machine Learning with R. CRC Press.
+Boehmke, B., & Greenwell, B. M. (2019). **Hands-On Machine Learning with R**. CRC Press.
 
-Molnar, C. (2020). Interpretable machine learning. Lulu.com.
+Molnar, C. (2020). **Interpretable machine learning**. Lulu.com.
 
-Riley, R. D., van der Windt, D., Croft, P., & Moons, K. G. (Eds.). (2019). Prognosis Research in Healthcare: concepts, methods, and impact. Oxford University Press.
+Riley, R. D., van der Windt, D., Croft, P., & Moons, K. G. (Eds.). (2019). **Prognosis Research in Healthcare: concepts, methods, and impact**. Oxford University Press.
 
-Steyerberg, E. W. (2019). Clinical prediction models. Springer International Publishing.
+Steyerberg, E. W. (2019). **Clinical prediction models**. Springer International Publishing.
