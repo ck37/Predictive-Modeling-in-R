@@ -1,0 +1,20 @@
+---
+title: "Clean data: merge"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# This file provides the startup() function.
+source("R/_startup.R")
+
+# Load desired packages and report any missing packages that should be installed.
+startup(auto_install = FALSE, verbose = FALSE)
+
+# Load any additional R files in the R/ directory.
+ck37r::load_all_code("R", verbose = TRUE)
+```
+
+```{r}
+```
