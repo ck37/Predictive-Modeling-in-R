@@ -2,26 +2,26 @@
 
 Biomedical machine learning tutorial using heart disease as an application
 
-Author: Chris J. Kennedy
+Author: Chris J. Kennedy ([ck37.com](https://ck37.com))
 
 [RStudio Cloud link], [Slides link], [Binder link]
 
 ## Repository structure
 
- * Analysis
-   * 1-clean-**merge**.Rmd - import and merge raw data
-   * 2-clean-**impute**.Rmd - analyze missingness, impute missing values, histogram condense
-   * 3-clean-**finalize**.Rmd - factors to indicators, collinearity, check invertability
-   * 4-**eda**.Rmd - exploratory data analysis
-   * 5-**modeling**.Rmd - SuperLearner ensembling and nested SuperLearner evaluation
-   * 6-**interpretation**.Rmd - variable importance and accumulated local effects
- * Directories
-   * R/ - supplemental functions
-     * _startup.R - bootstraps the loading and potential installation of packages
-   * data-raw/ - raw, read-only data
-   * data/ - processed data
-   * tables/ - Latex-based results tables
-   * visuals/ - plots, primarily as png or PDF
+ * **Analysis**
+   * [1-clean-**merge**.Rmd](#tbd) - import and merge raw data
+   * [2-clean-**impute**.Rmd](#tbd) - analyze missingness, impute missing values, histogram condense
+   * [3-clean-**finalize**.Rmd](#tbd) - factors to indicators, collinearity, check invertability
+   * [4-**eda**.Rmd](#tbd) - exploratory data analysis
+   * [5-**modeling**.Rmd](#tbd) - SuperLearner ensembling and nested SuperLearner evaluation
+   * [6-**interpretation**.Rmd](#tbd) - variable importance and accumulated local effects
+ * **Directories**
+   * [R/](#tbd) - supplemental functions
+     * [_startup.R](#tbd) - bootstraps the loading and potential installation of packages
+   * [data-raw/](#tbd) - raw, read-only data
+   * [data/](#tbd) - processed data
+   * [tables/](#tbd) - Latex-based results tables
+   * [visuals/](#tbd) - plots, primarily as png or PDF
  
 Ideally use bookdown, integrate renv, use slido, and add drake.
 
