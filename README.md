@@ -8,20 +8,20 @@ Author: Chris J. Kennedy
 
 ## Repository structure
 
- * 1-clean-merge.Rmd
- * 2-clean-impute.Rmd
- * 3-clean-finalize.Rmd
- * 4-eda.Rmd
- * 5-modeling.Rmd
- * 6-interpretation.Rmd
+ * 1-clean-**merge**.Rmd
+ * 2-clean-**impute**.Rmd
+ * 3-clean-**finalize**.Rmd
+ * 4-**eda**.Rmd
+ * 5-**modeling**.Rmd
+ * 6-**interpretation**.Rmd
  * R/ - supplemental functions
- * data-raw/ - raw, read-only data
     * _startup.R - bootstraps the loading and potential installation of packages
+ * data-raw/ - raw, read-only data
  * data/ - processed data
  * tables/ - Latex-based results tables
  * visuals/ - plots, primarily as png or PDF
  
- Ideally use add bookdown, use slido, and integrate renv, and drake.
+Ideally use add bookdown, use slido, and integrate renv, and drake.
 
 ## Recommended reading
 
