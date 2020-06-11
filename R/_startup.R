@@ -132,6 +132,7 @@ attr(startup, "packages_cran") = c(
   
   ###################
   # Visualization
+  "cowplot",     # Combining plots
   "ggplot2",     # Plotting framework
   "superheat",   # Heatmaps
   "gginnards",   # used in variable-importance.Rmd?
