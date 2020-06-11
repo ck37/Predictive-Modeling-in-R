@@ -112,6 +112,7 @@ attr(startup, "packages_cran") = c(
   
   ###################
   # Data cleaning and management
+  "caret",       # Identify collinear predictors
   "dplyr",
   # Conflicts with dplyr for some functions, so don't load automatically.
   #"data.table",
@@ -136,6 +137,7 @@ attr(startup, "packages_cran") = c(
   "gginnards",   # used in variable-importance.Rmd?
   "iml",         # Interpretable machine learning
   "rpart.plot",  # Decision tree plots
+  "scales",      # Improve labeling of ggplot axes
   
   ###################
   # Machine learning
@@ -144,6 +146,7 @@ attr(startup, "packages_cran") = c(
   "OOBCurve",    # RF performance plateau analysis.
   "mgcv",        # Splines
   "mlr",         # Machine learnning framework. TODO: Update to mlr3
+  "precrec",     # PR-AUC analysis
   "ranger",      # Random Forest
   "rpart",       # Decision trees
   "xgboost",     # Extreme gradient boosting
