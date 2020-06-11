@@ -21,9 +21,163 @@ ck37r::load_all_code("R", verbose = TRUE)
 
 Previous file: 5-modeling.Rmd
 
+## Load data
+
+```{r load_data}
+# Created in 3-clean-finalize.Rmd
+# Objects included: data, vars, var_df
+# renv also includes a load() method, so we specify base:: here.
+base::load("data/clean-finalize-imputed.RData")
+```
+
 ## Variable importance
+
+### Random forest 
+
+```{r varimp_rf}
+# Created in 5-modeling.Rmd
+load("data/model-rf.RData")
+
+rf_imp = ranger::importance(rf)
+# Sort by descending importance.
+rf_imp = rf_imp[order(rf_imp, decreasing = TRUE)]
+
+# Review top 10 real quick.
+round(rf_imp, 4)[1:10]
+
+print_imp = as.data.frame(rf_imp[, drop = FALSE])
+
+print_imp
+
+# Mean decrease in accuracy.
+colnames(print_imp) = c("mean_dec_acc")
+
+print_imp$var = rownames(print_imp)
+print_imp2 = print_imp
+
+# Add ranking to the rownames.
+print_imp2$var = paste0(1:nrow(print_imp2), ". ", print_imp2$var)
+print_imp2
+colnames(print_imp2)[2] = "Variable"
+
+# Reverse ordering of columns.
+print_imp2 = print_imp2[, c(2, 1)]
+
+rownames(print_imp2) = NULL
+
+#
+#print_imp2 = print_imp2[, c("Variable", "Mean Decrease Accuracy (%)")]#, "Description")]
+#print_imp2 = print_imp2[, c("Variable", "\thead{Mean\\{}Decrease\\{}Accuracy (%)}")]#, "Description")]
+print_imp2
+
+# Convert to a percentage.
+print_imp2[, 2] = print_imp2[, 2] * 100
+
+# TODO: fix variable names and restrict to ~15 variables.
+
+
+
+# Manually escape variable names.
+print_imp2$Variable = gsub("_", "\\_", print_imp2$Variable, fixed = TRUE)
+print_imp2
+
+colnames(print_imp2)[1] = "\\thead{Variable}"
+colnames(print_imp2)[2] = "\\thead{Mean\\\\{}Decrease\\\\{}Accuracy (\\%)}"
+
+
+# Top 20.
+(kab_table =
+    kable(print_imp2[1:20, ],
+          format = "latex",
+          digits = c(0, 3),
+          booktabs = TRUE,
+          escape = FALSE,
+          row.names = FALSE))
+cat(kab_table %>% kable_styling(latex_options = "striped"),
+    file = "tables/vim-rf-top20.tex")
+```
 
 ## Accumulated local effect plots
 
+```{r ale_plot}
+task = makeClassifTask(data = data[, c(vars$predictors, vars$outcomes[1])],
+                       target = vars$outcomes[1])
+ 
+learner = makeLearner("classif.ranger",
+                      predict.type = "prob",
+                      # TODO: confirm best mtry.
+                      mtry = 4,
+                      num.trees = 200L,
+                      num.threads = get_cores())
+
+# This takes 1 second
+system.time({
+  mod.mlr = mlr::train(learner, task)
+})
+
+mod.mlr$learner.model
+
+mod2 = Predictor$new(mod.mlr, data = data[, !names(data) %in% vars$outcomes[1]],
+                    y = data[[vars$outcomes[1]]])
+
+
+
+# Default plot
+#effect$plot()
+
+# Calculate multiple ALE effects at a time.
+system.time({
+  effect2 = iml::FeatureEffects$new(mod2,
+                               grid.size = 20L,
+                               features = c("oldpeak", "trestbps"))
+})
+
+# Default plot.
+effect2$effects[["oldpeak"]]$plot()
+  
+
+# Improved plot
+# TODO: move into ck37r
+plot_ale = function(var, var_display) {
+
+  
+  if (FALSE) {
+  effect = iml::FeatureEffect$new(mod2,
+                                  grid.size = 32L,
+                                  feature = var)
+  
+  old_results = effect$results
+  
+  effect$results  = old_results[old_results$.class == 1, ]
+  }
+  
+  old_results = effect2$effects[[var]]$results
+  effect2$effects[[var]]$results  = old_results[old_results$.class == 1, ]
+  
+  (p = effect2$effects[[var]]$plot(rug = FALSE) +
+    theme_minimal() + theme(strip.text.x = element_blank()) +
+    labs(x = var_display))
+  
+  # Density plot
+  (p2 = ggplot(data = data, aes_string(x = var)) +
+    geom_density(fill = "gray70", color = "gray40") +
+    theme_minimal() + labs(y = "Sample\nDensity") +
+    #scale_x_log10(breaks = breaks, limits = limits) +
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_text(size = 8),
+          # Include x-axis major gridlines to ensure that plots are aligned.
+          panel.grid.major.y = element_blank(),
+          panel.grid.minor = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank()))
+  
+  print(cowplot::plot_grid(p, p2, align = "v", ncol = 1, rel_heights = c(0.9, 0.1)))
+  
+  ggsave(paste0("visuals/ale-", var, ".pdf"), width = 4, height = 4)
+}
+
+
+plot_ale("oldpeak", "Old peak")
+```
 
 
