@@ -10,19 +10,19 @@ Author: Chris Kennedy ([ck37.com](https://ck37.com))
 ## Repository structure
 
  * **Analysis**
-   * [1-clean-**merge**.Rmd](https://github.com/ck37/data-science-r/blob/master/1-clean-merge.Rmd) - import and merge raw data, extreme values, constant predictors ([output](https://ck37.github.io/data-science-r/1-clean-merge.html))
-   * [2-clean-**impute**.Rmd](https://github.com/ck37/data-science-r/blob/master/2-clean-impute.Rmd) - analyze missingness, impute missing values, histogram condense ([output](https://ck37.github.io/data-science-r/2-clean-impute.html))
-   * [3-clean-**finalize**.Rmd](https://github.com/ck37/data-science-r/blob/master/3-clean-finalize.Rmd) - factors to indicators, collinearity, check invertability ([output](https://ck37.github.io/data-science-r/3-clean-finalize.html))
-   * [4-**eda**.Rmd](https://github.com/ck37/data-science-r/blob/master/4-eda.Rmd) - exploratory data analysis
-   * [5-**modeling**.Rmd](https://github.com/ck37/data-science-r/blob/master/5-modeling.Rmd) - random forest convergence, SuperLearner ensembling, and nested SuperLearner evaluation ([output](https://ck37.github.io/data-science-r/5-modeling.html))
-   * [6-**interpretation**.Rmd](https://github.com/ck37/data-science-r/blob/master/6-interpretation.Rmd) - variable importance and accumulated local effects ([output](https://ck37.github.io/data-science-r/6-interpretation.html))
+   * [1-clean-**merge**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/1-clean-merge.Rmd) - import and merge raw data, extreme values, constant predictors ([output](https://ck37.github.io/Data-Science-R/1-clean-merge.html))
+   * [2-clean-**impute**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/2-clean-impute.Rmd) - analyze missingness, impute missing values, histogram condense ([output](https://ck37.github.io/Data-Science-R/2-clean-impute.html))
+   * [3-clean-**finalize**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/3-clean-finalize.Rmd) - factors to indicators, collinearity, check invertability ([output](https://ck37.github.io/Data-Science-R/3-clean-finalize.html))
+   * [4-**eda**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/4-eda.Rmd) - exploratory data analysis
+   * [5-**modeling**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/5-modeling.Rmd) - random forest convergence, SuperLearner ensembling, and nested SuperLearner evaluation ([output](https://ck37.github.io/Data-Science-R/5-modeling.html))
+   * [6-**interpretation**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/6-interpretation.Rmd) - variable importance and accumulated local effects ([output](https://ck37.github.io/Data-Science-R/6-interpretation.html))
  * **Directories**
-   * [R/](https://github.com/ck37data-science-r/tree/master/R) - supplemental functions
+   * [R/](https://github.com/ck37Data-Science-R/tree/master/R) - supplemental functions
      * [_startup.R](#tbd) - bootstraps the loading and potential installation of packages
-   * [data-raw/](https://github.com/ck37/data-science-r/tree/master/data-raw) - raw, read-only data
+   * [data-raw/](https://github.com/ck37/Data-Science-R/tree/master/data-raw) - raw, read-only data
    * [data/](https://github.com/ck37/learning/tree/master/data) - processed data
-   * [tables/](https://github.com/ck37/data-science-r/tree/master/tables) - results tables, primarily Latex or Excel
-   * [visuals/](https://github.com/ck37/data-science-r/tree/master/visuals) - plots, primarily as png or PDF
+   * [tables/](https://github.com/ck37/Data-Science-R/tree/master/tables) - results tables, primarily Latex or Excel
+   * [visuals/](https://github.com/ck37/Data-Science-R/tree/master/visuals) - plots, primarily as png or PDF
  
 Ideally use bookdown, integrate renv, use slido, and add drake.
 
@@ -52,5 +52,5 @@ Steyerberg, E. W. (2019). **Clinical prediction models**. Springer International
 If you find this tutorial useful please cite it as noted below:
 
 Kennedy, Chris J. (2020). "Tutorial on data science in R." GitHub repository.
-https://github.com/ck37/data-science-r
+https://github.com/ck37/Data-Science-R
 
