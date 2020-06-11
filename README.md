@@ -9,18 +9,18 @@ Author: Chris J. Kennedy ([ck37.com](https://ck37.com))
 ## Repository structure
 
  * **Analysis**
-   * [1-clean-**merge**.Rmd](#tbd) - import and merge raw data
+   * [1-clean-**merge**.Rmd](#tbd) - import and merge raw data, extreme values, constant predictors
    * [2-clean-**impute**.Rmd](#tbd) - analyze missingness, impute missing values, histogram condense
    * [3-clean-**finalize**.Rmd](#tbd) - factors to indicators, collinearity, check invertability
    * [4-**eda**.Rmd](#tbd) - exploratory data analysis
-   * [5-**modeling**.Rmd](#tbd) - SuperLearner ensembling and nested SuperLearner evaluation
-   * [6-**interpretation**.Rmd](#tbd) - variable importance, RF convergence, and accumulated local effects
+   * [5-**modeling**.Rmd](#tbd) - random forest convergence, SuperLearner ensembling, and nested SuperLearner evaluation
+   * [6-**interpretation**.Rmd](#tbd) - variable importance and accumulated local effects
  * **Directories**
    * [R/](#tbd) - supplemental functions
      * [_startup.R](#tbd) - bootstraps the loading and potential installation of packages
    * [data-raw/](#tbd) - raw, read-only data
    * [data/](#tbd) - processed data
-   * [tables/](#tbd) - Latex-based results tables
+   * [tables/](#tbd) - results tables, primarily Latex or Excel
    * [visuals/](#tbd) - plots, primarily as png or PDF
  
 Ideally use bookdown, integrate renv, use slido, and add drake.
@@ -30,6 +30,11 @@ Ideally use bookdown, integrate renv, use slido, and add drake.
 ### Source article
 
 Kennedy, Chris J., Mark, Dustin, Huang, Jie, Reed, Mary. (2020). "Development of a nested ensemble machine learning prognostic model for predicting 60-day risk ofmajor adverse cardiac events in adults with chest pain."
+
+
+### Source data
+
+(Add heart disease citation.)
 
 ### Books
 
