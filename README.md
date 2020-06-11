@@ -2,7 +2,7 @@
 
 Data science and machine learning tutorial using heart disease as an application.
 
-Author: Chris Kennedy ([ck37.com](https://ck37.com))
+**Author**: Chris Kennedy ([ck37.com](https://ck37.com))
 
 [RStudio Cloud](https://rstudio.cloud/project/1374321),
 [Google Slides ](https://docs.google.com/presentation/d/1jL7ukjJ95T-J0XbCOd2O-eMr4EGpqF5AzP2VxFoYRMA/edit#slide=id.p) 
