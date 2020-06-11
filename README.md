@@ -31,8 +31,7 @@ Ideally use bookdown, integrate renv, use slido, and add drake.
 
 ### Source article
 
-Kennedy, Chris J., Mark, Dustin, Huang, Jie, Reed, Mary. (2020). "Development of a nested ensemble machine learning prognostic model for predicting 60-day risk ofmajor adverse cardiac events in adults with chest pain."
-
+Kennedy, Chris J., Mark, Dustin, Huang, Jie, Reed, Mary. (2020). "Development of a nested ensemble machine learning prognostic model for predicting 60-day risk of major adverse cardiac events in adults with chest pain."
 
 ### Source data
 
