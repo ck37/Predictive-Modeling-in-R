@@ -1,6 +1,9 @@
 ---
 title: "EDA"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -16,3 +19,17 @@ startup(auto_install = FALSE, verbose = FALSE)
 ck37r::load_all_code("R", verbose = TRUE)
 ```
 
+Previous file: 3-clean-finalize.Rmd
+
+## Load data
+
+```{r load_data}
+# Created in 1-clean-merge.Rmd
+# Objects included: data, vars
+# renv also includes a load() method, so we specify base:: here.
+base::load("data/clean-finalize-imputed.RData")
+```
+
+# TBD
+
+Next file: 5-modeling.Rmd

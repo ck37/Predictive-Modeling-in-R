@@ -1,6 +1,9 @@
 ---
 title: "Interpretation"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -15,4 +18,12 @@ startup(auto_install = FALSE, verbose = FALSE)
 # Load any additional R files in the R/ directory.
 ck37r::load_all_code("R", verbose = TRUE)
 ```
+
+Previous file: 5-modeling.Rmd
+
+## Variable importance
+
+## Accumulated local effect plots
+
+
 
