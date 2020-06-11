@@ -36,7 +36,7 @@ base::load("data/clean-finalize-imputed.RData")
 
 ```{r varimp_rf}
 # Created in 5-modeling.Rmd
-load("data/model-rf.RData")
+base::load("data/model-rf.RData")
 
 rf_imp = ranger::importance(rf)
 # Sort by descending importance.
