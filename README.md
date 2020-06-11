@@ -4,24 +4,24 @@ Biomedical machine learning tutorial using heart disease as an application. If y
 
 Author: Chris J. Kennedy ([ck37.com](https://ck37.com))
 
-[RStudio Cloud link], [Slides link], [Binder link]
+[RStudio Cloud](https://rstudio.cloud/project/1374321), [Slides link](https://docs.google.com/presentation/d/1jL7ukjJ95T-J0XbCOd2O-eMr4EGpqF5AzP2VxFoYRMA/edit#slide=id.p)
 
 ## Repository structure
 
  * **Analysis**
-   * [1-clean-**merge**.Rmd](#tbd) - import and merge raw data, extreme values, constant predictors
-   * [2-clean-**impute**.Rmd](#tbd) - analyze missingness, impute missing values, histogram condense
-   * [3-clean-**finalize**.Rmd](#tbd) - factors to indicators, collinearity, check invertability
-   * [4-**eda**.Rmd](#tbd) - exploratory data analysis
-   * [5-**modeling**.Rmd](#tbd) - random forest convergence, SuperLearner ensembling, and nested SuperLearner evaluation
-   * [6-**interpretation**.Rmd](#tbd) - variable importance and accumulated local effects
+   * [1-clean-**merge**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/1-clean-merge.Rmd) - import and merge raw data, extreme values, constant predictors
+   * [2-clean-**impute**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/2-clean-impute.Rmd) - analyze missingness, impute missing values, histogram condense
+   * [3-clean-**finalize**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/3-clean-finalize.Rmd) - factors to indicators, collinearity, check invertability
+   * [4-**eda**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/4-eda.Rmd) - exploratory data analysis
+   * [5-**modeling**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/5-modeling.Rmd) - random forest convergence, SuperLearner ensembling, and nested SuperLearner evaluation
+   * [6-**interpretation**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/6-interpretation.Rmd) - variable importance and accumulated local effects
  * **Directories**
-   * [R/](#tbd) - supplemental functions
+   * [R/](https://github.com/ck37/biomedical-machine-learning/tree/master/R) - supplemental functions
      * [_startup.R](#tbd) - bootstraps the loading and potential installation of packages
-   * [data-raw/](#tbd) - raw, read-only data
-   * [data/](#tbd) - processed data
-   * [tables/](#tbd) - results tables, primarily Latex or Excel
-   * [visuals/](#tbd) - plots, primarily as png or PDF
+   * [data-raw/](https://github.com/ck37/biomedical-machine-learning/tree/master/data-raw) - raw, read-only data
+   * [data/](https://github.com/ck37/biomedical-machine-learning/tree/master/data) - processed data
+   * [tables/](https://github.com/ck37/biomedical-machine-learning/tree/master/tables) - results tables, primarily Latex or Excel
+   * [visuals/](https://github.com/ck37/biomedical-machine-learning/tree/master/visuals) - plots, primarily as png or PDF
  
 Ideally use bookdown, integrate renv, use slido, and add drake.
 
