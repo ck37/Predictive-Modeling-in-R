@@ -534,7 +534,8 @@ library(ggplot2)
                     labels = cvsl$Y,
                     modnames = names(pred_df)))
 
-# Show a Precision-Recall plot comparing all 3 scores.
+# Show a Precision-Recall plot comparing all estimators.
+# TODO: subset this one and improve legend placement.
 autoplot(sscurves, "PRC") +
   labs(title = element_blank()) +
   theme(legend.position = c(0.65, 0.65),
