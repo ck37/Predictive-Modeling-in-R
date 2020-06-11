@@ -10,12 +10,12 @@ Author: Chris J. Kennedy ([ck37.com](https://ck37.com))
 ## Repository structure
 
  * **Analysis**
-   * [1-clean-**merge**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/1-clean-merge.Rmd) - import and merge raw data, extreme values, constant predictors
-   * [2-clean-**impute**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/2-clean-impute.Rmd) - analyze missingness, impute missing values, histogram condense
-   * [3-clean-**finalize**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/3-clean-finalize.Rmd) - factors to indicators, collinearity, check invertability
+   * [1-clean-**merge**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/1-clean-merge.Rmd) - import and merge raw data, extreme values, constant predictors ([output](https://ck37.github.io/biomedical-machine-learning/1-clean-merge.html))
+   * [2-clean-**impute**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/2-clean-impute.Rmd) - analyze missingness, impute missing values, histogram condense ([output](https://ck37.github.io/biomedical-machine-learning/2-clean-impute.html))
+   * [3-clean-**finalize**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/3-clean-finalize.Rmd) - factors to indicators, collinearity, check invertability ([output](https://ck37.github.io/biomedical-machine-learning/3-clean-finalize.html))
    * [4-**eda**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/4-eda.Rmd) - exploratory data analysis
-   * [5-**modeling**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/5-modeling.Rmd) - random forest convergence, SuperLearner ensembling, and nested SuperLearner evaluation
-   * [6-**interpretation**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/6-interpretation.Rmd) - variable importance and accumulated local effects
+   * [5-**modeling**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/5-modeling.Rmd) - random forest convergence, SuperLearner ensembling, and nested SuperLearner evaluation ([output](https://ck37.github.io/biomedical-machine-learning/5-modeling.html))
+   * [6-**interpretation**.Rmd](https://github.com/ck37/biomedical-machine-learning/blob/master/6-interpretation.Rmd) - variable importance and accumulated local effects ([output](https://ck37.github.io/biomedical-machine-learning/6-interpretation.html))
  * **Directories**
    * [R/](https://github.com/ck37/biomedical-machine-learning/tree/master/R) - supplemental functions
      * [_startup.R](#tbd) - bootstraps the loading and potential installation of packages
