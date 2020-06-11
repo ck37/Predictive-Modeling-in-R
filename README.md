@@ -1,6 +1,6 @@
 # Short Course: Data Science in R 
 
-Data science and machine learning tutorial using heart disease as an application. If you use this tutorial in your work or research, please [cite the repository](#citation).
+Data science and machine learning tutorial using heart disease as an application.
 
 Author: Chris Kennedy ([ck37.com](https://ck37.com))
 
