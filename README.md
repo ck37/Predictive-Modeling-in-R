@@ -1,11 +1,11 @@
 # Short Course: Data Science in R 
 
-Data science and machine learning tutorial using heart disease as an application.
+Data science and machine learning tutorial using heart disease as an application. Work in progress.
 
 **Author**: Chris Kennedy ([ck37.com](https://ck37.com))
 
-[RStudio Cloud](https://rstudio.cloud/project/1374321),
-[Google Slides ](https://docs.google.com/presentation/d/1jL7ukjJ95T-J0XbCOd2O-eMr4EGpqF5AzP2VxFoYRMA/edit#slide=id.p) 
+Run interactively in [RStudio Cloud](https://rstudio.cloud/project/1374321)
+ 
 
 ## Repository structure
 
@@ -31,7 +31,7 @@ Ideally use bookdown, integrate renv, use slido, and add drake.
 
 ### Source article
 
-Kennedy, Chris J., Mark, Dustin, Huang, Jie, Reed, Mary. (2020). "Development of a nested ensemble machine learning prognostic model for predicting 60-day risk of major adverse cardiac events in adults with chest pain."
+Kennedy, Chris J., Mark, Dustin, Huang, Jie, Reed, Mary. (2020). "Development of a nested ensemble machine learning prognostic model for predicting 60-day risk of major adverse cardiac events in adults with chest pain." [Google Slides ](https://docs.google.com/presentation/d/1jL7ukjJ95T-J0XbCOd2O-eMr4EGpqF5AzP2VxFoYRMA/edit#slide=id.p)
 
 ### Source data
 
@@ -43,9 +43,9 @@ Boehmke, B., & Greenwell, B. M. (2019). **Hands-On Machine Learning with R**. CR
 
 Molnar, C. (2020). **Interpretable machine learning**. Lulu.com. ([Free online](https://christophm.github.io/interpretable-ml-book/))
 
-Riley, R. D., van der Windt, D., Croft, P., & Moons, K. G. (Eds.). (2019). **Prognosis Research in Healthcare: concepts, methods, and impact**. Oxford University Press.
+Riley, R. D., van der Windt, D., Croft, P., & Moons, K. G. (Eds.). (2019). **Prognosis Research in Healthcare: concepts, methods, and impact**. Oxford University Press. ([Amazon](https://smile.amazon.com/Prognosis-Research-Healthcare-Concepts-Methods-ebook/dp/B07N2YY6TQ/))
 
-Steyerberg, E. W. (2019). **Clinical prediction models**. Springer International Publishing.
+Steyerberg, E. W. (2019). **Clinical prediction models**. Springer International Publishing. ([Amazon](https://smile.amazon.com/Clinical-Prediction-Models-Development-Validation-ebook/dp/B00CE3B36G/))
 
 ## Citation
 
