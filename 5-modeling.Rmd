@@ -1,6 +1,9 @@
 ---
 title: "Modeling"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -15,3 +18,599 @@ startup(auto_install = FALSE, verbose = FALSE)
 # Load any additional R files in the R/ directory.
 ck37r::load_all_code("R", verbose = TRUE)
 ```
+
+Previous file: 4-eda.Rmd
+
+
+## Load data
+
+```{r load_data}
+# Created in 3-clean-finalize.Rmd
+# Objects included: data, vars, var_df
+# renv also includes a load() method, so we specify base:: here.
+base::load("data/clean-finalize-imputed.RData")
+```
+
+## Random forest
+
+```{r rf_fit}
+set.seed(1, "L'Ecuyer-CMRG")
+
+# mlr wants covariates and outcome to be in the same dataframe.
+
+# For classification RF needs Y to be a factor.
+# We use the best mtry based on the CV.SL results from the final prediction library.
+# Takes 1 second.
+(rf_time = system.time({
+  # Ranger uses all available threads by default, nice.
+  y = as.factor(data[[vars$outcomes[1]]]) 
+  rf = ranger::ranger(y ~ . ,
+                      data = data[, vars$predictors],
+                      num.threads = get_cores(),
+                      # Need this option for OOB curve analysis.
+                      keep.inbag = TRUE,
+                      num.trees = 4000,
+                      # Could also do importance = "impurity".
+                      importance = "permutation",
+                      # Set based on separate grid/random search.
+                      mtry = 4L,
+                      # Set based on separate grid/random search.
+                      min.node.size = 5L)
+}))
+save(rf, file = "data/model-rf.RData")
+```
+
+
+```{r rf_oob_curve}
+library(mlr)
+library(OOBCurve)
+
+oob_data = data[, c(vars$outcomes[1], vars$predictors), drop = FALSE]
+
+# Outcome needs to be a factor.
+oob_data[[vars$outcomes[1]]] = as.factor(data[[vars$outcomes[1]]])
+
+
+task = makeClassifTask(data = oob_data, target = vars$outcomes[1])
+# Current package has a bug such that multiple measures have to be specified.
+# We aren't using the Brier score though.
+# TODO: these results could be averaged over multiple random shufflings
+# of the tree ordering. Would give a more accurate, smoother curve.
+# This takes ~10 seconds.
+system.time({
+  results = OOBCurve(rf, measures = list(mlr::auc, mlr::brier), task = task,
+                     data = oob_data)
+})
+
+# Look at the OOB AUC with the maximum number of trees.
+# 0.894
+(rf_auc = results$auc[length(results$auc)])
+
+# Can zoom in to certain segments of the forest indexed by an ntree range.
+tree_start = 3
+#tree_start = 10
+tree_end = length(results$auc)
+x_span = seq(tree_start, tree_end)
+y_span = results$auc[x_span]
+
+ggplot(mapping = aes(x = x_span, y = y_span)) + geom_line() + theme_minimal() +
+  coord_fixed(ratio = 3) + 
+  scale_y_continuous(expand = c(0, 0), limits = c(0.5, 0.94)) +
+  scale_x_log10(breaks = c(3, 10, 30, 100, 300, 1000, 3000),
+                limits = c(3, 3000),
+                minor_breaks = NULL) +
+  labs(x = "Trees in the random forest", y = "Out of Bag AUC")
+
+ggsave("visuals/rf-error-rate-by-trees.pdf",
+       width = 7, height = 3)
+
+```
+
+## Ensemble
+
+### Prep SL library
+
+```{r prep_sl_library}
+# Via R/sl-dbarts2.R
+SL.dbarts = SL.dbarts2
+
+learner_bart =
+  create.Learner("SL.dbarts",
+                 # Turning off detailed_names because binary_offset has a negative value.
+                 #detailed_names = FALSE,
+                 detailed_names = TRUE,
+                 params = list(nthread = getOption("cores")),
+                 tune = list(ntree = c(1, 2, 5, 10, 20, 50, 100, 200, 500)))#,
+
+screen_names = function(Y, X, names = names(X), ...)  {
+    return(names(X) %in% names)
+}
+
+
+# TODO: add feature selection options (BART, lasso, RF)
+# TODO: explore optimization of the meta-learner step.
+xgb_tune = function(Y, X, newX, family, obsWeights, id, ...) {
+  cat("Running xgb_tune\n")
+  
+  # Create tuning grid.
+  grid = create.Learner("SL.xgboost_fast", detailed_names = TRUE, 
+                        tune = list(
+                          # 27 combos.
+                          ntrees = c(100L, 300L, 1000L),
+                          max_depth = c(1L, 3L, 6L),
+                          shrinkage = c(0.01, 0.1, 0.3)))
+  
+  grid2 = create.Learner("SL.xgboost_fast", detailed_names = TRUE, 
+                        tune = list(
+                          # 8 combos.
+                          ntrees = c(250L, 1000L),
+                          max_depth = c(2L, 4L),
+                          shrinkage = c(0.05, 0.2)))
+  
+  # Run SuperLearner.
+  # id argument is not being passed to avoid an error "stratified sampling with id not currently implemented"
+  sl = SuperLearner(Y = Y, X = X, newX = newX, obsWeights = obsWeights, family = family,
+                    SL.library = grid2$names,
+                    cvControl = SuperLearner.CV.control(stratifyCV = TRUE, V = 5L),
+                    verbose = FALSE)
+  
+  cat("XGB tuned SL:\n")
+  print(sl)
+  
+  # fit returns all objects needed for predict()
+  fit = list(object = sl)
+  
+  # Declare class of fit for predict()
+  class(fit) = 'SuperLearner'
+  
+  out = list(pred = sl$SL.predict, fit = fit)
+  return(out)
+}
+
+rf_tune = function(Y, X, newX, family, obsWeights, id, ...) {
+  cat("Running rf_tune\n")
+  
+  # Create tuning grid.
+  grid = create.Learner("SL.ranger", detailed_names = TRUE, 
+                        params = list(num.threads = get_cores(),
+                                      #num.trees = 700),
+                                      num.trees = 200),
+                        tune = list(
+                          # 9 combos.
+                          min.node.size = c(2L, 5L, 15L),
+                          mtry = floor(c(0.5, 1, 2) * sqrt(ncol(X)))))
+  
+  # Run SuperLearner.
+  # id argument is not being passed to avoid an error "stratified sampling with id not currently implemented"
+  sl = SuperLearner(Y = Y, X = X, newX = newX, obsWeights = obsWeights, family = family,
+                    #SL.library = c("SL.mean", grid$names),
+                    SL.library = grid$names,
+                    cvControl = SuperLearner.CV.control(stratifyCV = TRUE, V = 5L),
+                    verbose = FALSE)
+  
+  cat("RF tuned SL:\n")
+  print(sl)
+  
+  # fit returns all objects needed for predict()
+  fit = list(object = sl)
+  
+  # Declare class of fit for predict()
+  class(fit) = 'SuperLearner'
+  
+  out = list(pred = sl$SL.predict, fit = fit)
+  return(out)
+}
+
+glmnet_tune = function(Y, X, newX, family, obsWeights, id, ...) {
+  cat("Running glmnet_tune\n")
+  
+  # Create tuning grid.
+  grid = create.Learner("SL.glmnet_fast", detailed_names = TRUE, 
+                        # 4 combos
+                        tune = list(alpha = c(0.05, 0.3, 0.7, 0.95)))
+  
+  # Run SuperLearner.
+  # id argument is not being passed to avoid an error "stratified sampling with id not currently implemented"
+  sl = SuperLearner(Y = Y, X = X, newX = newX, obsWeights = obsWeights, family = family,
+                    #SL.library = c("SL.mean", grid$names),
+                    SL.library = grid$names,
+                    cvControl = SuperLearner.CV.control(stratifyCV = TRUE, V = 5L),
+                    verbose = FALSE)
+  
+  cat("Glmnet tuned SL:\n")
+  print(sl)
+  
+  # TODO: may need to save the learners, put them in the global environment, or otherwise
+  # handle in a custom predict() method.
+  
+  # fit returns all objects needed for predict()
+  fit = list(object = sl)
+  
+  # Declare class of fit for predict()
+  class(fit) = 'SuperLearner'
+  
+  out = list(pred = sl$SL.predict, fit = fit)
+  return(out)
+}
+
+rpart_tune = function(Y, X, newX, family, obsWeights, id, ...) {
+  cat("Running rpart_tune\n")
+  
+  # Create tuning grid.
+  grid = create.Learner("SL.rpart2", detailed_names = TRUE, 
+                        tune = list(cp = c(0, 0.01),
+                                    minsplit = c(10, 20, 80),
+                                    maxdepth = c(5, 15)))
+  
+  # Run SuperLearner.
+  # id argument is not being passed to avoid an error "stratified sampling with id not currently implemented"
+  sl = SuperLearner(Y = Y, X = X, newX = newX, obsWeights = obsWeights, family = family,
+                    #SL.library = c("SL.mean", grid$names),
+                    SL.library = grid$names,
+                    cvControl = SuperLearner.CV.control(stratifyCV = TRUE, V = 5L),
+                    verbose = FALSE)
+  
+  cat("Rpart tuned SL:\n")
+  print(sl)
+  
+  # TODO: may need to save the learners, put them in the global environment, or otherwise
+  # handle in a custom predict() method.
+  
+  # fit returns all objects needed for predict()
+  fit = list(object = sl)
+  
+  # Declare class of fit for predict()
+  class(fit) = 'SuperLearner'
+  
+  out = list(pred = sl$SL.predict, fit = fit)
+  return(out)
+}
+
+learner_mgcv =
+  create.Learner("SL.mgcv2",
+                 detailed_names = TRUE,
+                 params = list(nthreads = min(10L, get_cores()),
+                               continuous_values = 10L))
+
+
+(sl_lib = c(list("SL.mean",
+                 "SL.lm2",
+                 "SL.glm2",
+                 "SL.glmnet_fast"),
+#           stratified_lib$names, 
+#           rpart_pruned$names,
+           learner_mgcv$names,
+          list(
+            "rpart_tune",
+            "SL.ranger_200",
+            "rf_tune",
+            "SL.dbarts_200",
+            "xgb_tune",
+            "SL.xgboost_fast")))
+
+```
+
+### Estimate SuperLearner
+
+```{r estimate_sl, error = TRUE, eval = FALSE}
+set.seed(1, "L'Ecuyer-CMRG")
+
+(sl = SuperLearner(Y = data[[vars$outcomes[1]]], data[, vars$predictors],
+                  family = binomial(), SL.library = sl_lib,
+                  cvControl = SuperLearner.CV.control(stratifyCV = TRUE,
+                                                      #V = 10L),
+                                                      V = 2L),
+                  verbose = TRUE))
+
+sl
+
+save(sl,
+     file = "data/estimator-sl.RData")
+
+```
+
+### Review SL results
+
+```{r review_sl, error= TRUE, eval = TRUE}
+
+(auc_tab = ck37r::auc_table(sl, y = data[[vars$outcomes[1]]]))
+
+# Drop p-value column.
+auc_tab2 = auc_tab[, !names(auc_tab) %in% "p-value"]
+
+
+# TODO: convert to knitr/kableExtra
+print(xtable::xtable(auc_tab2, digits = 4), type = "latex",
+      file = "tables/sl-auc_table.tex")
+
+ck37r::plot_roc(sl, y = data[[vars$outcomes[1]]])
+ggsave("visuals/roc-superlearner.pdf")
+
+plot_table = function(x,
+                      metric = "auc",
+                      sort = TRUE) {
+
+  # Use a clearer object name.
+  tab = x
+
+  if (!is.null(sort)) {
+    tab = tab[order(tab[[metric]], decreasing = sort), ]
+  }
+
+  # Convert to a factor with manual levels so ggplot doesn't re-order
+  # alphabetically.
+  tab$learner = factor(tab$learner, levels = tab$learner)
+
+  rownames(tab) = NULL
+
+  p =
+    ggplot2::ggplot(tab,
+           aes(x = learner, y = get(metric), ymin = ci_lower, ymax = ci_upper)) +
+      ggplot2::geom_pointrange(fatten = 2) +
+      ggplot2::coord_flip() +
+      ggplot2::labs(x = "Learner", y = metric) + theme_minimal()
+
+  return(p)
+}
+
+# Skip SL.mean - it's too low to be worth plotting.
+plot_table(auc_tab[-1, ]) + labs(y = "Cross-validated ROC-AUC")
+ggsave("visuals/sl-roc-auc-comparison.pdf")
+
+```
+
+### SL PR-AUC
+
+```{r sl_prauc, error = TRUE, eval = FALSE}
+(prauc_tab = ck37r::prauc_table(sl, y = data[[vars$outcomes[1]]]))
+
+# TODO: switch to knitr
+print(xtable::xtable(prauc_tab, digits = 4), type = "latex",
+      file = "tables/sl-prauc_table.tex")
+
+plot_table(prauc_tab, metric = "prauc") + labs(y = "Cross-validated PR-AUC")
+ggsave("visuals/sl-prauc-comparison.pdf")
+```
+
+### SL plots
+
+```{r sl_plots, error = TRUE, eval = FALSE}
+library(dplyr)
+
+df = data.frame(y = data[[vars$outcomes[1]]],
+                pred = as.vector(sl$SL.predict))
+
+df = df %>% mutate(decile = ntile(pred, 10L),
+                   vigintile = ntile(pred, 20L)) %>% as.data.frame()
+
+table(df$decile)
+
+summary(df)
+
+# Compare risk distribution for 0's vs 1's
+ggplot(data = df, aes(x = pred, color = factor(y))) + 
+  geom_density() + theme_minimal() +
+  labs(title = "Distribution of predicted risk for 0's vs 1's",
+         x = "Predicted risk Pr(Y = 1 | X)",
+         y = "Density")
+
+# Look at the risk distribution for each learner.
+for (learner_i in seq(ncol(sl$Z))) {
+  learner_name = sl$libraryNames[learner_i]
+  preds = sl$Z[, learner_i, drop = TRUE]
+  
+  df = data.frame(y = data[[vars$outcomes[1]]],
+                  pred = preds)
+  
+  g = ggplot(data = df, aes(x = pred, color = factor(y))) + 
+    geom_density() + theme_minimal() +
+    labs(title = "Distribution of predicted risk for 0's vs 1's",
+         subtitle = paste("Learner:", learner_name), 
+         x = "Predicted risk Pr(Y = 1 | X)",
+         y = "Density")
+  
+  print(g)
+
+}
+
+
+ggplot(data = df, aes(x = pred, color = factor(y))) + 
+  geom_freqpoly() + theme_minimal()
+
+# Quick calibration plot
+ggplot(data = df, aes(x = pred, y = y)) + 
+  geom_smooth() + theme_minimal() +
+  lims(y = c(0, 1))
+```
+
+## Nested ensemble
+
+Note: we are not currently saving the fitLibraries.
+
+```{r estimate_cvsl, eval = TRUE, error = TRUE}
+set.seed(1, "L'Ecuyer-CMRG")
+
+# 2 is fastest, 10 is most thorouugh.
+#outer_cv_folds = 10L
+#outer_cv_folds = 5L
+outer_cv_folds = 2L
+
+(cvsl =
+    CV.SuperLearner(Y = data[[vars$outcomes[1]]], data[, vars$predictors],
+          family = binomial(), SL.library = sl_lib,
+          cvControl =
+            SuperLearner.CV.control(stratifyCV = TRUE,
+                                    V = outer_cv_folds),
+          innerCvControl =
+            rep(list(SuperLearner.CV.control(stratifyCV = TRUE,
+                                             V = 2L)),
+                                             #V = 5L)),
+                                             #V = 10L)),
+                outer_cv_folds),
+          verbose = TRUE))
+
+save(cvsl,
+     file = "data/estimator-cvsl.RData")
+
+summary(cvsl)
+```
+
+### Review CV.SL
+
+```{r review_cvsl, eval = TRUE, error = TRUE}
+library(dplyr)
+library(ck37r)
+
+######
+# AUC analysis
+
+(auc_tab = auc_table(cvsl))
+
+# Drop p-value column.
+auc_tab2 = auc_tab[, !names(auc_tab) %in% "p-value"]
+
+# Convert rownames to learner column.
+auc_tab2$learner = rownames(auc_tab2)
+
+# Move learner column to the beginning.
+(auc_tab2 = cbind(learner = auc_tab2$learner,
+                  auc_tab2[, !names(auc_tab2) %in% "learner"]))
+
+colnames(auc_tab2)[1] = "learner"
+rownames(auc_tab2) = NULL
+
+# Skip SL.mean - it's too low to be worth plotting.
+plot_table(auc_tab2[-1, ]) + labs(y = "Cross-validated ROC-AUC")
+ggsave("visuals/cvsl-roc-auc-comparison.pdf")
+
+plot_roc(cvsl)
+ggsave("visuals/cvsl-roc.pdf")
+
+names(auc_tab2)
+
+names(auc_tab2) = c("Learner", "ROC-AUC", "Std. Err.", "CI Lower", "CI Upper")
+
+cat(kable(auc_tab2, digits = 4, format = "latex", booktabs = TRUE,
+          label = "cvsl-auc",
+          caption = "Cross-validated ROC-AUC discrimination performance"),
+      file = "tables/cvsl-auc_table.tex")
+
+
+######
+# Precision-Recall analysis
+
+(prauc_tab = prauc_table(cvsl))
+
+prauc_tab$learner = rownames(prauc_tab)
+rownames(prauc_tab) = NULL
+
+# Move learner column to the beginning.
+(prauc_tab = cbind(learner = prauc_tab$learner,
+                   prauc_tab[, !names(prauc_tab) %in% "learner"]))
+
+
+
+plot_table(prauc_tab, metric = "prauc") + labs(y = "Cross-validated PR-AUC")
+ggsave("visuals/cvsl-prauc-comparison.pdf")
+
+
+################
+# Precision-recall curve comparison.
+
+pred_lib = data.frame(cvsl$library.predict)
+
+names(pred_lib) = cvsl$libraryNames
+pred_df = pred_lib
+
+summary(pred_df)
+
+# Add on the SuperLearner prediction.
+pred_df$SuperLearner = cvsl$SL.predict
+
+library(precrec)
+library(ggplot2)
+
+(sscurves = evalmod(scores = pred_df,
+                    labels = cvsl$Y,
+                    modnames = names(pred_df)))
+
+# Show a Precision-Recall plot comparing all 3 scores.
+autoplot(sscurves, "PRC") +
+  labs(title = element_blank()) +
+  theme(legend.position = c(0.65, 0.65),
+        legend.text = element_text(size = 8), #face = "bold"),
+        legend.margin = margin(l = 0.2, r = 0.2, b = 0.2, unit = "cm"),
+        legend.background = element_rect(fill = alpha("gray95", 0.8),
+                                         color = "gray80"),
+        legend.key = element_blank())
+ggsave("visuals/prc-comparison.pdf",
+       width = 4, height = 4)
+
+
+################
+# PR-AUC table
+names(prauc_tab) = c("Learner", "PR-AUC", "Std. Err.", "CI Lower", "CI Upper")
+
+cat(kable(prauc_tab, digits = 4, format = "latex", booktabs = TRUE,
+          label = "cvsl-prauc",
+          caption = "Cross-validated PR-AUC discrimination performance") %>%
+      kable_styling(latex_options = "hold_position"),
+      file = "tables/cvsl-prauc_table.tex")
+
+
+# Review weight distribution.
+(weight_tab = ck37r::cvsl_weights(cvsl))
+
+# Remove algorithms with 0 weight.
+(weight_tab = weight_tab[weight_tab$Max > 0, ])
+
+cat(kable(weight_tab, digits = 4, format = "latex", booktabs = TRUE,
+          label = "cvsl-weights",
+          row.names = FALSE,
+          caption = "Distribution of algorithm weights across ensemble cross-validation replications") %>%
+      kable_styling(latex_options = "hold_position"),
+      file = "tables/cvsl-weight-table.tex")
+
+
+##########################
+# Brier score table.
+
+(brier_tab = ck37r::brier_table(cvsl))
+
+
+names(brier_tab) = c("Brier score", "Std. Err.", "CI Lower", "CI Upper")
+
+brier_tab = cbind(Learner = rownames(brier_tab), brier_tab)
+
+rownames(brier_tab) = NULL
+
+cat(kable(brier_tab, digits = 5, format = "latex", booktabs = TRUE,
+          label = "cvsl-brier",
+          row.names = FALSE,
+          caption = "Cross-validated Brier score for each learner and the ensemble") %>%
+      kable_styling(latex_options = "hold_position"),
+      file = "tables/cvsl-brier-table.tex")
+
+
+##########################
+# Index of prediction accuracy table.
+
+(ipa_tab = ck37r::ipa_table(cvsl))
+
+
+names(ipa_tab) = c("IPA", "Std. Err.", "CI Lower", "CI Upper")
+
+ipa_tab = cbind(Learner = rownames(ipa_tab), ipa_tab)
+
+rownames(ipa_tab) = NULL
+
+cat(kable(ipa_tab, digits = 4, format = "latex", booktabs = TRUE,
+          label = "cvsl-ipa",
+          row.names = FALSE,
+          caption = "Cross-validated index of prediction accuracy for each learner and the ensemble") %>%
+      kable_styling(latex_options = "hold_position"),
+      file = "tables/cvsl-ipa-table.tex")
+
+```
+
+Next file: 6-interpretation.Rmd
