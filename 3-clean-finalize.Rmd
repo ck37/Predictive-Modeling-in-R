@@ -1,6 +1,9 @@
 ---
 title: "Clean data: finalize"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -15,3 +18,106 @@ startup(auto_install = FALSE, verbose = FALSE)
 # Load any additional R files in the R/ directory.
 ck37r::load_all_code("R", verbose = TRUE)
 ```
+
+Previous file: 2-clean-impute.Rmd
+
+## Load data
+
+```{r load_data}
+# Created in 2-clean-impute.Rmd
+# Objects included: data, vars
+# renv also includes a load() method, so we specify base:: here.
+base::load("data/clean-impute.RData")
+```
+
+## Factors to indicators
+
+```{r factors_indicators}
+result = ck37r::factors_to_indicators(data[vars$predictors], verbose = TRUE)
+
+names(result)
+
+# Temporarily remove all predictors from the dataframe.
+data[vars$predictors] = NULL
+
+# Now add the new data back on.
+data = cbind(data, result$data)
+
+# Remove the original factor predictors from the list of used predictors, add
+# add the new indicator predictors.
+(vars$predictors = c(setdiff(vars$predictors, result$factor_vars), unlist(result$factor_names)))
+
+# Confirm that our predictor vector is updated correctly.
+if (!all(vars$predictors %in% names(data))) {
+  missing_vars = setdiff(vars$predictors, names(data))
+  stop("Missing new indicators that were added: ", paste(missing_vars, collapse = ", "))
+}
+  
+
+rm(result)
+```
+
+## Remove collinear predictors
+
+This is not essential, but nice for the linear regression estimators.
+
+This needs to be after imputation, because it currently cannot handle missingness.
+
+```{r remove_collinear}
+# Remove linearly correlated columns from the covariate file
+# NOTE: assumes that there are no factor variables.
+linear_combos = caret::findLinearCombos(data[, vars$predictors])
+
+if (length(linear_combos$remove) > 0L) {
+
+  if (conf$verbose) {
+    cat("Removing", length(linear_combos$remove), "predictors due to collinearity.\n")
+    cat("Vars:", paste0(vars$predictors[linear_combos$remove], collapse = ", "), "\n")
+  }
+  
+  # Make sure we don't switch to a vector if only 1 column remains.
+  data = data[, !colnames(data) %in% vars$predictors[linear_combos$remove],
+              drop = FALSE]
+  
+  vars$predictors = setdiff(vars$predictors, vars$predictors[linear_combos$remove])
+  
+  if (conf$verbose) {
+    cat("Updated predictor count:", length(vars$predictors), "\n")
+  }
+} else {
+  cat("No linear duplication found.\n")
+}
+
+rm(linear_combos)
+```
+
+## Confirm predictor matrix invertability
+
+This is not essential, but nice for the linear regression estimators.
+
+```{r confirm_invertability}
+# Compute covariance matrix.
+# NOTE: this requires that no factors be included.
+cov_mat = stats::cov(data[vars$predictors])
+  
+# Compute QR decomposition of covariance matrix.
+qr_cov = base::qr(cov_mat)
+
+# These need to be equal for the covariance matrix to be full rank.
+if (ncol(cov_mat) != qr_cov$rank) {
+  cat("Warning: matrix of predictors is not full rank.\n")
+  cat("Predictor columns:", ncol(cov_mat), "QR rank:", qr_cov$rank, "\n")
+} else {
+  cat("Predictor matrix is full rank.\n")
+}
+rm(cov_mat, qr_cov)
+```
+
+## Save finalized dataset
+
+```{r save_finalized}
+save(data, vars,
+     file = "data/clean-finalize-imputed.RData")
+```
+
+Next file: 4-eda.Rmd
