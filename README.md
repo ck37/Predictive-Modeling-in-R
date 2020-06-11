@@ -39,9 +39,9 @@ Kennedy, Chris J., Mark, Dustin, Huang, Jie, Reed, Mary. (2020). "Development of
 
 ### Books
 
-Boehmke, B., & Greenwell, B. M. (2019). **Hands-On Machine Learning with R**. CRC Press.
+Boehmke, B., & Greenwell, B. M. (2019). **Hands-On Machine Learning with R**. CRC Press. ([Free online](https://bradleyboehmke.github.io/HOML/))
 
-Molnar, C. (2020). **Interpretable machine learning**. Lulu.com.
+Molnar, C. (2020). **Interpretable machine learning**. Lulu.com. ([Free online](https://christophm.github.io/interpretable-ml-book/))
 
 Riley, R. D., van der Windt, D., Croft, P., & Moons, K. G. (Eds.). (2019). **Prognosis Research in Healthcare: concepts, methods, and impact**. Oxford University Press.
 
