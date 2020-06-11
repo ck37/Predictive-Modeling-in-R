@@ -4,7 +4,8 @@ Biomedical machine learning tutorial using heart disease as an application. If y
 
 Author: Chris J. Kennedy ([ck37.com](https://ck37.com))
 
-[RStudio Cloud](https://rstudio.cloud/project/1374321), [Slides link](https://docs.google.com/presentation/d/1jL7ukjJ95T-J0XbCOd2O-eMr4EGpqF5AzP2VxFoYRMA/edit#slide=id.p)
+[RStudio Cloud](https://rstudio.cloud/project/1374321),
+[Google Slides ](https://docs.google.com/presentation/d/1jL7ukjJ95T-J0XbCOd2O-eMr4EGpqF5AzP2VxFoYRMA/edit#slide=id.p) 
 
 ## Repository structure
 
