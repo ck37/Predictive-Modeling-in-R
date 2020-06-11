@@ -19,7 +19,7 @@ startup(auto_install = FALSE, verbose = FALSE)
 ck37r::load_all_code("R", verbose = TRUE)
 ```
 
-Previous file: 5-modeling.Rmd
+Previous file: 6-calibration.Rmd
 
 ## Load data
 

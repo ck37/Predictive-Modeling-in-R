@@ -15,7 +15,8 @@ Data science and machine learning tutorial using heart disease as an application
    * [3-clean-**finalize**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/3-clean-finalize.Rmd) - factors to indicators, collinearity, check invertability ([output](https://ck37.github.io/Data-Science-R/3-clean-finalize.html))
    * [4-**eda**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/4-eda.Rmd) - exploratory data analysis
    * [5-**modeling**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/5-modeling.Rmd) - random forest convergence, SuperLearner ensembling, and nested SuperLearner evaluation ([output](https://ck37.github.io/Data-Science-R/5-modeling.html))
-   * [6-**interpretation**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/6-interpretation.Rmd) - variable importance and accumulated local effects ([output](https://ck37.github.io/Data-Science-R/6-interpretation.html))
+   * [6-**calibration**.Rmd]() - calibration of prediction
+   * [7-**interpretation**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/7-interpretation.Rmd) - variable importance and accumulated local effects ([output](https://ck37.github.io/Data-Science-R/7-interpretation.html))
  * **Directories**
    * [R/](https://github.com/ck37Data-Science-R/tree/master/R) - supplemental functions
      * [_startup.R](#tbd) - bootstraps the loading and potential installation of packages
@@ -35,7 +36,7 @@ Kennedy, Chris J., Mark, Dustin, Huang, Jie, Reed, Mary. (2020). "Development of
 
 ### Source data
 
-(Add heart disease citation.)
+Janosi, A., Steinbrunn, W., Pfisterer, M., & Detrano, R. (1988). [Heart disease data set](https://archive.ics.uci.edu/ml/datasets/Heart+Disease). The UCI KDD Archive.
 
 ### Books
 
