@@ -412,7 +412,7 @@ for (i in seq_len(nrow(params))) {
     gamma_y = params$gamma_y[i],
     transform = "STANDARDIZE", 
     # This is set artificially low so that it runs quickly during the tutorial.
-    max_iterations = 50,
+    max_iterations = 30,
     # This is a more typical setting:
     #max_iterations = 2000,
     max_runtime_secs = 1000,
