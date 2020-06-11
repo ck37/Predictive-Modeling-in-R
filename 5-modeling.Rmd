@@ -60,8 +60,11 @@ set.seed(1, "L'Ecuyer-CMRG")
 save(rf, file = "data/model-rf.RData")
 ```
 
+### RF convergence plot
 
-```{r rf_oob_curve}
+The results of this block are cached because they are slow to compute.
+
+```{r rf_oob_curve, cache = TRUE}
 library(mlr)
 library(OOBCurve)
 
@@ -97,7 +100,7 @@ ggplot(mapping = aes(x = x_span, y = y_span)) + geom_line() + theme_minimal() +
   coord_fixed(ratio = 3) + 
   scale_y_continuous(expand = c(0, 0), limits = c(0.5, 0.94)) +
   scale_x_log10(breaks = c(3, 10, 30, 100, 300, 1000, 3000),
-                limits = c(3, 3000),
+                limits = c(3, 4000),
                 minor_breaks = NULL) +
   labs(x = "Trees in the random forest", y = "Out of Bag AUC")
 
@@ -114,6 +117,7 @@ ggsave("visuals/rf-error-rate-by-trees.pdf",
 # Via R/sl-dbarts2.R
 SL.dbarts = SL.dbarts2
 
+# We aren't using this grid.
 learner_bart =
   create.Learner("SL.dbarts",
                  # Turning off detailed_names because binary_offset has a negative value.
@@ -140,6 +144,7 @@ xgb_tune = function(Y, X, newX, family, obsWeights, id, ...) {
                           max_depth = c(1L, 3L, 6L),
                           shrinkage = c(0.01, 0.1, 0.3)))
   
+  # Coarser/faster grid.
   grid2 = create.Learner("SL.xgboost_fast", detailed_names = TRUE, 
                         tune = list(
                           # 8 combos.
@@ -151,7 +156,10 @@ xgb_tune = function(Y, X, newX, family, obsWeights, id, ...) {
   # id argument is not being passed to avoid an error "stratified sampling with id not currently implemented"
   sl = SuperLearner(Y = Y, X = X, newX = newX, obsWeights = obsWeights, family = family,
                     SL.library = grid2$names,
-                    cvControl = SuperLearner.CV.control(stratifyCV = TRUE, V = 5L),
+                    cvControl = SuperLearner.CV.control(stratifyCV = TRUE,
+                                                        # Set to 2 for tutorial.
+                                                        V = 2L),
+                                                        #V = 5L),
                     verbose = FALSE)
   
   cat("XGB tuned SL:\n")
@@ -173,7 +181,7 @@ rf_tune = function(Y, X, newX, family, obsWeights, id, ...) {
   # Create tuning grid.
   grid = create.Learner("SL.ranger", detailed_names = TRUE, 
                         params = list(num.threads = get_cores(),
-                                      #num.trees = 700),
+                                      # Set this based on the convergence analysis.
                                       num.trees = 200),
                         tune = list(
                           # 9 combos.
@@ -185,7 +193,10 @@ rf_tune = function(Y, X, newX, family, obsWeights, id, ...) {
   sl = SuperLearner(Y = Y, X = X, newX = newX, obsWeights = obsWeights, family = family,
                     #SL.library = c("SL.mean", grid$names),
                     SL.library = grid$names,
-                    cvControl = SuperLearner.CV.control(stratifyCV = TRUE, V = 5L),
+                    cvControl = SuperLearner.CV.control(stratifyCV = TRUE,
+                                                        # Set to 2 for tutorial.
+                                                        V = 2L),
+                                                        #V = 5L),
                     verbose = FALSE)
   
   cat("RF tuned SL:\n")
@@ -212,9 +223,11 @@ glmnet_tune = function(Y, X, newX, family, obsWeights, id, ...) {
   # Run SuperLearner.
   # id argument is not being passed to avoid an error "stratified sampling with id not currently implemented"
   sl = SuperLearner(Y = Y, X = X, newX = newX, obsWeights = obsWeights, family = family,
-                    #SL.library = c("SL.mean", grid$names),
                     SL.library = grid$names,
-                    cvControl = SuperLearner.CV.control(stratifyCV = TRUE, V = 5L),
+                    cvControl = SuperLearner.CV.control(stratifyCV = TRUE,
+                                                        # Set to 2 for tutorial purposes.
+                                                        V = 2L), 
+                                                        #V = 5L),
                     verbose = FALSE)
   
   cat("Glmnet tuned SL:\n")
@@ -292,12 +305,15 @@ learner_mgcv =
 
 ### Estimate SuperLearner
 
-```{r estimate_sl, error = TRUE, eval = FALSE}
+The results of this block are cached because they are slow to compute.
+
+```{r estimate_sl, error = TRUE, eval = TRUE, cache = TRUE}
 set.seed(1, "L'Ecuyer-CMRG")
 
-(sl = SuperLearner(Y = data[[vars$outcomes[1]]], data[, vars$predictors],
-                  family = binomial(), SL.library = sl_lib,
-                  cvControl = SuperLearner.CV.control(stratifyCV = TRUE,
+(sl = SuperLearner(Y = data[[vars$outcomes[1]]],
+                   X = data[, vars$predictors],
+                   family = binomial(), SL.library = sl_lib,
+                   cvControl = SuperLearner.CV.control(stratifyCV = TRUE,
                                                       #V = 10L),
                                                       V = 2L),
                   verbose = TRUE))
@@ -425,14 +441,18 @@ ggplot(data = df, aes(x = pred, y = y)) +
 
 ## Nested ensemble
 
+
+The results of this block are cached because they are slow to compute.
+
 Note: we are not currently saving the fitLibraries.
 
-```{r estimate_cvsl, eval = TRUE, error = TRUE}
+```{r estimate_cvsl, eval = TRUE, error = TRUE, cache = TRUE}
 set.seed(1, "L'Ecuyer-CMRG")
 
-# 2 is fastest, 10 is most thorouugh.
+# 2 is fastest, 10 is most thorough.
 #outer_cv_folds = 10L
 #outer_cv_folds = 5L
+# Low setting to speed up tutorial.
 outer_cv_folds = 2L
 
 (cvsl =
@@ -443,6 +463,7 @@ outer_cv_folds = 2L
                                     V = outer_cv_folds),
           innerCvControl =
             rep(list(SuperLearner.CV.control(stratifyCV = TRUE,
+                                             # Low setting to speed up tutorial.
                                              V = 2L)),
                                              #V = 5L)),
                                              #V = 10L)),
@@ -455,9 +476,27 @@ save(cvsl,
 summary(cvsl)
 ```
 
-### Review CV.SL
+### Ensemble weights
 
-```{r review_cvsl, eval = TRUE, error = TRUE}
+```{r cvsl_weights}
+
+# Review weight distribution.
+(weight_tab = ck37r::cvsl_weights(cvsl))
+
+# Remove algorithms with 0 weight.
+(weight_tab = weight_tab[weight_tab$Max > 0, ])
+
+cat(kable(weight_tab, digits = 4, format = "latex", booktabs = TRUE,
+          label = "cvsl-weights",
+          row.names = FALSE,
+          caption = "Distribution of algorithm weights across ensemble cross-validation replications") %>%
+      kable_styling(latex_options = "hold_position"),
+      file = "tables/cvsl-weight-table.tex")
+```
+
+### AUC analysis 
+
+```{r cvsl_auc, eval = TRUE, error = TRUE}
 library(dplyr)
 library(ck37r)
 
@@ -494,7 +533,11 @@ cat(kable(auc_tab2, digits = 4, format = "latex", booktabs = TRUE,
           label = "cvsl-auc",
           caption = "Cross-validated ROC-AUC discrimination performance"),
       file = "tables/cvsl-auc_table.tex")
+```
 
+### Precision-Recall analysis
+
+```{r cvsl_prauc}
 
 ######
 # Precision-Recall analysis
@@ -558,20 +601,12 @@ cat(kable(prauc_tab, digits = 4, format = "latex", booktabs = TRUE,
       kable_styling(latex_options = "hold_position"),
       file = "tables/cvsl-prauc_table.tex")
 
+```
 
-# Review weight distribution.
-(weight_tab = ck37r::cvsl_weights(cvsl))
 
-# Remove algorithms with 0 weight.
-(weight_tab = weight_tab[weight_tab$Max > 0, ])
+### Brier score
 
-cat(kable(weight_tab, digits = 4, format = "latex", booktabs = TRUE,
-          label = "cvsl-weights",
-          row.names = FALSE,
-          caption = "Distribution of algorithm weights across ensemble cross-validation replications") %>%
-      kable_styling(latex_options = "hold_position"),
-      file = "tables/cvsl-weight-table.tex")
-
+```{r cvsl_brier_score}
 
 ##########################
 # Brier score table.
@@ -591,7 +626,11 @@ cat(kable(brier_tab, digits = 5, format = "latex", booktabs = TRUE,
           caption = "Cross-validated Brier score for each learner and the ensemble") %>%
       kable_styling(latex_options = "hold_position"),
       file = "tables/cvsl-brier-table.tex")
+```
 
+### Index of prediction accuracy
+
+```{r cvsl_ipa}
 
 ##########################
 # Index of prediction accuracy table.
@@ -614,4 +653,4 @@ cat(kable(ipa_tab, digits = 4, format = "latex", booktabs = TRUE,
 
 ```
 
-Next file: 6-interpretation.Rmd
+Next file: 6-calibration.Rmd
