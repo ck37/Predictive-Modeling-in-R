@@ -1,6 +1,9 @@
 ---
 title: "Clean data: impute"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -15,3 +18,780 @@ startup(auto_install = FALSE, verbose = FALSE)
 # Load any additional R files in the R/ directory.
 ck37r::load_all_code("R", verbose = TRUE)
 ```
+
+Previous file: 1-clean-merge.Rmd
+
+## Load data
+
+```{r load_data}
+# Created in 1-clean-merge.Rmd
+
+# Objects included: data, vars
+# renv also includes a load() method, so we specify base:: here.
+base::load("data/clean-merge-unimputed.RData")
+```
+
+## Tutorial-only: add random missingness
+
+Our example dataset has no missingness, so for this tutorial we are artifically adding missingness.
+
+```{r add_missingness}
+# Add missingness to certain predictors.
+
+# Number of data cells to set to be missing.
+missing_cells = 20L
+
+set.seed(1)
+
+# Randomly sample 20 patients to have a missing value.
+miss_rows = sample(nrow(data), missing_cells, replace = TRUE)
+
+# Randomly select X predictors to have missingness.
+miss_preds = sample(vars$predictors, missing_cells, replace = TRUE)
+
+miss_df = data.frame(miss_rows, miss_preds, stringsAsFactors = FALSE)
+for (row_i in seq(nrow(miss_df))) {
+  row = miss_df[row_i, , drop = FALSE]
+  data[row$miss_rows, row$miss_preds] = NA
+}
+
+# Confirm that we now have some missing data.
+colSums(is.na(data))
+```
+
+## Examine predictor missingness
+
+### Missingness table
+
+```{r missingness_predictors}
+# Look at missingness among predictors.
+missing = is.na(data[, vars$predictors])
+
+# This will be a zero-row tibble if there is no missingness in the data.
+missing_df =
+  data.frame(var = colnames(missing),
+             missing_mean = colMeans(missing),
+             missing_count = colSums(missing)) %>%
+  filter(missing_count > 0) %>% arrange(desc(missing_mean))
+
+missing_df
+
+if (nrow(missing_df) == 0) {
+  cat("No missinginess found in the predictors.")
+} else {
+
+  missing_df$missing_mean = paste0(round(missing_df$missing_mean * 100, 1), "%")
+  missing_df$missing_count = prettyNum(missing_df$missing_count, big.mark = ",")
+  
+  colnames(missing_df) = c("Variable", "Missing rate", "Missing values")
+  
+  print({ kab_table = kable(missing_df, format = "latex", digits = c(0, 3, 0),
+                     booktabs = TRUE) })
+  cat(kab_table %>% kable_styling(latex_options = "striped"),
+      file = "tables/missingness-table.tex")
+}
+```
+
+### Missingness heatmap
+
+```{r missingness_heatmap}
+
+if (nrow(missing_df) == 0) {
+  cat("Skipping missingness heatmap, no missigness found in predictors.")
+} else {
+
+  # Correlation table of missingness
+  # Only examine variables with missingness > 0%.
+  missing2 = is.na(data[, as.character(missing_df$Variable)])
+  
+  colMeans(missing2)
+  
+  cor(missing2)
+  
+  # Correlation matrix of missingness.
+  (missing_cor = cor(missing2))
+  
+  # Replace the unit diagonal with NAs so that it doesn't show as yellow.
+  diag(missing_cor) = NA
+  
+  # Heatmap of correlation table.
+  #png("visuals/missingness-superheat.png", height = 600, width = 900)
+  superheat::superheat(missing_cor,
+            # Change the angle of the label text
+            bottom.label.text.angle = 90,
+            pretty.order.rows = TRUE,
+            pretty.order.cols = TRUE,
+            row.dendrogram = TRUE,
+            scale = FALSE)
+  #dev.off()
+}
+```
+
+### Missingness count plot
+
+```{r missingness_count}
+
+if (nrow(missing_df) == 0L) {
+  cat("Skipping missingness count plot, no missingness found in predictors.")
+} else {
+  
+  # Table with count of missing covariates by observation.
+  missing_counts = rowSums(missing2)
+  table(missing_counts)
+  # Typical observation is missing 6 covariates.
+  summary(missing_counts)
+  
+  # Code from:
+  # https://stackoverflow.com/questions/27850123/ggplot2-have-shorter-tick-marks-for-tick-marks-without-labels?noredirect=1&lq=1
+  
+  # Major tick marks
+  major = 100
+  
+  # Minor tick marks
+  minor = 20
+  
+  # Range of x values
+  # Ensure that we always start at 0.
+  (range = c(0, 2* minor + sum(missing_counts == as.integer(names(which.max(table(missing_counts)))))))
+  
+  # Function to insert blank labels
+  # Borrowed from https://stackoverflow.com/questions/14490071/adding-minor-tick-marks-to-the-x-axis-in-ggplot2-with-no-labels/14490652#14490652
+  insert_minor <- function(major, n_minor) {
+        labs <- c(sapply(major, function(x, y) c(x, rep("", y) ), y = round(n_minor)))
+        labs[1:(length(labs) - n_minor)]
+  }
+  
+  # Getting the 'breaks' and 'labels' for the ggplot
+  n_minor = major / minor - 1
+  (breaks = seq(min(range), max(range), minor))
+  (labels = insert_minor(seq(min(range), max(range), major), n_minor))
+  if (length(breaks) > length(labels)) labels = c(labels, rep("", length(breaks) - length(labels)))
+
+
+  print(ggplot(data.frame(missing_counts), aes(x = missing_counts)) +
+  geom_bar(aes(y = ..count..)) +
+  theme_minimal() +
+  geom_text(aes(label = scales::percent(..prop..), y = ..count..),
+             stat = "count", hjust = -0.2, size = 3, nudge_x = 0.05,
+            color = "gray30",
+            NULL) + 
+  scale_x_continuous(breaks = seq(0, max(table(missing_counts)))) +
+  scale_y_continuous(breaks = breaks,
+                     labels = ifelse(labels != "", prettyNum(labels, big.mark = ",", preserve.width = "none"), ""),
+                     limits = c(0, max(range))) +
+  labs(title = "Distribution of number of missing covariates",
+       x = "Number of covariates that are missing",
+       y = "Count of observations in dataset") +
+  # Remove grid axes, add gray background.
+  # Label each value on x axis.
+  theme(panel.grid = element_blank(),
+        axis.ticks.x = element_line(color = "gray60", size = 0.5),
+        panel.background = element_rect(fill = "white", color = "gray50"),
+        plot.background = element_rect(fill = "gray95")) +
+  coord_flip())
+  ggsave("visuals/missing-count-hist.png", width = 8, height = 4)
+  
+  # X variables with missingness
+  print(ncol(missing2))
+
+}
+```
+
+## Examine outcome missingness
+
+```{r missingness_outcomes}
+table(data[[vars$outcomes[1]]], useNA = "ifany")
+```
+
+## Impute missing predictor values
+
+### Missingness indicators
+
+```{r missingness_indicators}
+# Briefly review missingness.
+colMeans(is.na(data[, vars$predictors]))
+
+# First create matrix of missingness indicators for all covariates.
+miss_inds =
+  ck37r::missingness_indicators(data,
+                                skip_vars = c(vars$exclude, vars$outcome),
+                                verbose = TRUE)
+colMeans(miss_inds)
+```
+
+### Impute to 0
+
+Some variables we want to explicitly set to 0 if they are unobserved.
+
+```{r impute_missing_values}
+
+# Manually impute certain variables to 0 rather than use the sample median (or GLRM).
+impute_to_0_vars = c("exang")
+
+# Review missingness one last time for these vars.
+colMeans(is.na(data[, impute_to_0_vars, drop = FALSE]))
+
+# Also review the median before we conduct imputation.
+summary(data[, impute_to_0_vars])
+
+# Impute these variables specifically to 0, rather than sample median (although
+# in many cases the median was already 0).
+data[, impute_to_0_vars] = lapply(data[, impute_to_0_vars, drop = FALSE], function(col) {
+  col[is.na(col)] = 0L
+  col
+})
+
+# Confirm we have no more missingness in these vars.
+colMeans(is.na(data[, impute_to_0_vars, drop = FALSE]))
+```
+
+We will use generalized low-rank models in h2o.ai software.
+
+### GLRM prep
+
+
+```{r glrm_prep}
+
+# Subset using var_df$var so that it's in the same order as var_df.
+impute_df = data[, var_df$var]
+
+# Convert binary variables to logical
+(binary_vars = var_df$var[var_df$type == "binary"])
+for (binary_name in binary_vars) {
+  impute_df[[binary_name]] = as.logical(impute_df[[binary_name]])
+}
+
+# NOTE: these will be turned into factor variables within h2o.
+table(sapply(impute_df, class))
+
+# Create a dataframe describing the loss function by variable; the first variable must have index = 0
+losses = data.frame("index" = seq(ncol(impute_df)) - 1,
+                    "feature" = var_df$var,
+                    "class" = var_df$class,
+                    "type" = var_df$type,
+                    stringsAsFactors = FALSE)
+
+
+# Update class for binary variables.
+for (binary_name in binary_vars) {
+  losses[var_df$var == binary_name, "class"] = class(impute_df[[binary_name]])
+}
+
+losses$loss[losses$class == "numeric"] = "Huber"
+
+losses$loss[losses$class == "integer"] = "Huber"
+#losses$loss[losses$class == "integer"] = "Poisson"
+
+losses$loss[losses$class == "factor"] = "Categorical"
+
+losses$loss[losses$type == "binary"] = "Hinge"
+# Logistic seems to yield worse reconstruction RMSE overall.
+#losses$loss[losses$type == "binary"] = "Logistic"
+
+
+losses
+
+```
+
+### Start h2o
+
+```{r start_h2o}
+# We are avoiding library(h2o) due to namespace conflicts with dplyr & related packages.
+# Initialize h2o
+h2o::h2o.no_progress()  # Turn off progress bars
+analyst_name = "chris-kennedy"
+h2o::h2o.init(max_mem_size = "15g",
+              name = paste0("h2o-", analyst_name),
+              # Default port is 54321, but other analysts may be using that.
+              port = 54320,
+              # This can reduce accidental sharing of h2o processes on a shared server.
+              username = analyst_name,
+              password = paste0("pw-", analyst_name),
+              # Use half of available cores for h2o.
+              nthreads = get_cores())
+```
+
+### Load data into h2o
+
+```{r h2o_load}
+# Convert data to h2o object
+h2o_df = h2o::as.h2o(impute_df)
+(h2o_types = unlist(h2o::h2o.getTypes(h2o_df)))
+
+# Double-check side-by-side.
+cbind(losses, h2o_types)
+```
+
+### GLRM train/test split.
+
+
+```{r glrm_split}
+
+# Split data into train & validation
+split = h2o::h2o.splitFrame(h2o_df, ratios = 0.75, seed = 1)
+train = split[[1]]
+valid = split[[2]]
+
+val_df = as.data.frame(valid)
+```
+
+### Define GLRM grid
+
+Follow hyperparameter optimization method shown at:
+  * https://github.com/h2oai/h2o-tutorials/blob/master/best-practices/glrm/GLRM-BestPractices.Rmd
+  * and https://bradleyboehmke.github.io/HOML/GLRM.html#tuning-to-optimize-for-unseen-data
+
+
+```{r glrm_define_grid}
+
+# Create hyperparameter search grid
+params = expand.grid(
+  # Try 3 values on the exponential scale up to the maximum number of predictors.
+  k = round(exp(log(length(vars$predictors)) * exp(c(-0.8, -0.5, -0.1)))),
+  regularization_x = c("None", "Quadratic", "L1"),
+  regularization_y = c("None", "Quadratic", "L1"),
+  gamma_x = c(0, 1, 4),
+  gamma_y = c(0, 1, 4),
+  error_num = NA,
+  error_cat = NA,
+  objective = NA,
+  stringsAsFactors = FALSE)
+
+# 243 combinations!
+dim(params)
+
+# Remove combinations in which regularization_x = None and gamma_x != 0
+params = subset(params, regularization_x != "None" | gamma_x == 0)
+
+# Remove combinations in which regularization_x != None and gamma_x == 0
+params = subset(params, regularization_x == "None" | gamma_x != 0)
+
+# Remove combinations in which regularization_y = None and gamma_y != 0
+params = subset(params, regularization_y != "None" | gamma_y == 0)
+
+# Remove combinations in which regularization_y != None and gamma_y == 0
+params = subset(params, regularization_y == "None" | gamma_y != 0)
+
+# Down to 75 combinations.
+dim(params)
+
+params
+
+# Randomly order the params so that we can stop at any time.
+set.seed(1)
+params = params[sample(nrow(params)), ]
+params
+```
+
+### GLRM grid search (manual)
+
+```{r glrm_grid_search, eval = FALSE}
+
+glrm_metrics = list()
+# Summary text
+glrm_sum = list()
+
+nrow(params)
+
+# Perform grid search - takes about 150 seconds.
+system.time({
+for (i in seq_len(nrow(params))) {
+  cat("Iteration", i, "of", nrow(params), "", paste0(round(i / nrow(params) * 100, 1), "%\n"))
+  print(params[i, ])
+  
+  # Create model
+  glrm_model = h2o::h2o.glrm(
+    training_frame = train,
+    # h2o requires that the validation frame have the same # of rows as the training data for some reason.
+    #validation_frame = valid,
+    k = params$k[i], 
+    loss = "Quadratic",
+    regularization_x = params$regularization_x[i], 
+    regularization_y = params$regularization_y[i],
+    gamma_x = params$gamma_x[i],
+    gamma_y = params$gamma_y[i],
+    transform = "STANDARDIZE", 
+    # This is set artificially low so that it runs quickly during the tutorial.
+    max_iterations = 50,
+    # This is a more typical setting:
+    #max_iterations = 2000,
+    max_runtime_secs = 1000,
+    seed = 1,
+    loss_by_col_idx = losses$index,
+    loss_by_col = losses$loss)
+  
+  summ_text = capture.output({ h2o::summary(glrm_model) })
+  glrm_sum[[i]] = summ_text
+  h2o::summary(glrm_model)
+  plot(glrm_model)
+  
+  params$objective[i] = glrm_model@model$objective
+  
+  # Predict on validation set and extract error
+  # Warning: this can throw java.lang.ArrayIndexOutOfBoundsException
+  try({
+    validate = h2o::h2o.performance(glrm_model, valid)
+    #print(validate@metrics)
+    glrm_metrics[[i]] = validate@metrics
+    
+    params$error_num[i] = validate@metrics$numerr
+    params$error_cat[i] = validate@metrics$caterr
+    
+  })
+  
+  # Removing the model prevents the index error from occurring!
+  h2o::h2o.rm(glrm_model)
+  
+  # Save after each iteration in case it crashes.
+  # This could go inside the try()
+  # params should be the first object.
+    save(params, glrm_metrics, glrm_sum,
+       file = "data/glrm-tuned-results.RData")
+}
+})
+
+# TODO: confirm that this is correct.
+params$error = params$error_num + params$error_cat
+
+save(params, glrm_metrics, glrm_sum,
+     file = "data/glrm-tuned-results.RData")
+
+qplot(params$error) + theme_minimal() +
+  labs(x = "Test set error")
+
+params = params %>% arrange(error) %>% as.data.frame()
+
+# Look at the top 10 models with the lowest error rate
+head(params, 25)
+
+# Look at the worst models
+tail(params, 25)
+
+rio::export(params, file = "tables/glrm-grid-search.xlsx")
+```
+
+
+### Apply best GLRM
+
+```{r apply_glrm}
+params = rio::import("tables/glrm-grid-search.xlsx")
+
+(best_params = params %>% arrange(error) %>% as.data.frame() %>% head(1))
+
+system.time({
+  # Now run on full dataset.
+glrm_result =
+  h2o::h2o.glrm(training_frame = h2o_df, cols = colnames(h2o_df),
+           loss = "Quadratic",
+           model_id = "impute_glrm",
+           seed = 1,
+           k = best_params$k,
+           max_iterations = 2000,
+           # This is necessary to ensure that the model can optimize, otherwise
+           # there may be no improvement in the objective.
+           transform = "STANDARDIZE", 
+           regularization_x = best_params$regularization_x,
+           regularization_y = best_params$regularization_y,
+           gamma_x = best_params$gamma_x,
+           gamma_y = best_params$gamma_y,
+           loss_by_col_idx = losses$index,
+           loss_by_col = losses$loss)
+})
+
+h2o::summary(glrm_result)
+glrm_result
+plot(glrm_result)
+
+```
+
+### Review GLRM
+
+```{r review_glrm}
+
+# Don't use h2o's provided model$importance statistics, they are flawed.
+# We need to calculate these manually for now (Apr. 2020).
+
+# Extract compressed dataset.
+new_data = as.data.frame(h2o::h2o.getFrame(glrm_result@model$representation_name))
+
+# Calculate variances for each archetype.
+(variances = sapply(new_data, stats::var))
+
+# Sort variances in descending order
+(variances = variances[order(variances, decreasing = TRUE)])
+
+glrm_vars = data.frame(variances, pct_total = variances / sum(variances))
+glrm_vars$cumulative_pct = cumsum(glrm_vars$pct_total)
+glrm_vars$order = seq(nrow(glrm_vars))
+
+glrm_vars
+
+data.frame(
+    component  = glrm_vars$order,
+    PVE = glrm_vars$pct_total,
+    CVE = glrm_vars$cumulative_pct
+) %>%
+    tidyr::gather(metric, variance_explained, -component) %>%
+    ggplot(aes(component, variance_explained)) +
+    geom_point() + theme_minimal() + 
+    facet_wrap(~ metric, ncol = 1, scales = "free")
+ggsave("visuals/imputation-glrm-component-plot-custom.png")
+
+# Examine how many components (archetypes) to use.
+library(dplyr)
+library(ggplot2)
+
+# Reconstructed data from GLRM.
+recon_df = h2o::h2o.reconstruct(glrm_result, h2o_df,
+                                reverse_transform = TRUE)
+# Fix column names.
+names(recon_df) = names(impute_df)
+
+# Convert from h2o object back to an R df.
+recon_df = as.data.frame(recon_df)
+
+#####################
+# Quick quality review on age variable.
+
+# Compare imputed values to known values.
+known_age = !is.na(impute_df$age)
+# Examine RMSE = 4.3
+sqrt(mean((impute_df$age[known_age] - recon_df$age[known_age])^2))
+# Compare to median imputation, RMSE = 9.1
+sqrt(mean((impute_df$age[known_age] - median(impute_df$age[known_age]))^2))
+# Compare to mean imputation, RMSE = 9.1
+sqrt(mean((impute_df$age[known_age] - mean(impute_df$age[known_age]))^2))
+
+```
+
+### Evaluate imputation
+
+```{r impute_eval}
+
+# TODO: serialize GLRM h2o object for future reference.
+
+# Calculate median/mode imputation for comparison to GLRM.
+impute_info =
+  ck37r::impute_missing_values(data,
+                               # TODO: need to skip date variables, e.g. POSIXct.
+                               # This is yieling an h2o error currently.
+                               skip_vars = c(vars$exclude, vars$outcome),
+                               # Don't add indicators as we've already created those.
+                               add_indicators = FALSE,
+                               type = "standard",
+                               verbose = TRUE)
+
+# Skip race because it's categorical.
+# Also skip the "impute to 0" variables.
+(vars_with_missingness =
+  var_df$var[var_df$missingness > 0 & !var_df$var %in% c("race") &
+             !var_df$var %in% impute_to_0_vars])
+
+# Bound GLRM variables back to the original bounds.
+for (var in vars_with_missingness) {
+  row = var_df[var_df$var == var, , drop = FALSE]
+  
+  # Skip factor vars.
+  if (row$class != "factor") {
+    recon_df[[var]] = pmin(pmax(recon_df[[var]], row$min), row$max)
+  }
+}
+
+# Round integer and ordinal vars back to be integers.
+for (var in c(vars$integers, vars$ordinal)) {
+  # TODO: confirm if we need both round() and as.integer() here.
+  recon_df[[var]] = as.integer(round(recon_df[[var]]))
+}
+
+
+# Loop over each variable and compare GLRM imputation to median/mode imputation
+# Use RMSE as a comparison metric.
+# TODO: use a training/test split to make this kosher.
+impute_compare = data.frame(var = vars_with_missingness,
+                            loss = losses[var_df$var %in% vars_with_missingness, "loss"],
+                            missingness = var_df[var_df$var %in% vars_with_missingness, "missingness"],
+                            error_glrm = NA,
+                            error_median = NA,
+                            pct_reduction = NA,
+                            stringsAsFactors = FALSE)
+
+
+# TODO: get this to work with categorical variables.
+# For now, remove categorical variables.
+#(impute_compare = subset(impute_compare, loss != "Categorical"))
+
+
+for (var in impute_compare$var) {
+  # Obesity became a factor?
+  cat("Analzying", var, class(data[[var]]), class(recon_df[[var]]), "\n")
+  
+  # Analyze the rows in which the variable is not missing.
+  observed_rows = !is.na(data[[var]])
+  
+  # Calculate RMSE for GLRM.
+  error_glrm = sqrt(mean((impute_df[observed_rows, var] -
+                          recon_df[observed_rows, var])^2))
+  
+  # Compare to median imputation.
+  error_median = sqrt(mean((impute_df[observed_rows, var] -
+                            impute_info$impute_values[[var]])^2))
+  
+  # Save results
+  impute_compare[impute_compare$var == var,
+                 c("error_glrm", "error_median")] = c(error_glrm, error_median)
+}
+
+impute_compare$pct_reduction =  1 - impute_compare$error_glrm / impute_compare$error_median
+
+(impute_compare = impute_compare %>% arrange(desc(missingness)) %>% as.data.frame())
+
+cat("Average percent reduction in RMSE:",
+    round(100 * mean(impute_compare$pct_reduction, na.rm = TRUE), 1), "\n")
+
+save(impute_compare, file = "data/imputation-comparison-glrm.RData")
+
+# Make a separate copy for use in the paper.
+imput_comp = impute_compare
+
+imput_comp$pct_reduction = round(imput_comp$pct_reduction * 100, 2)
+imput_comp$missingness = round(imput_comp$missingness * 100, 2)
+
+# Remove loss column.
+imput_comp$loss = NULL
+
+names(imput_comp) = c("Variable", "Missingness", "Error GLRM", "Error Median", "Percent reduction")
+
+
+(kab_table = kable(imput_comp, format = "latex", digits = c(1, 1, 3, 3, 1),
+                   caption = "Comparing missing value imputation using GLRM versus median/mode",
+                   label = "imputation-comparison",
+                   booktabs = TRUE))
+cat(kab_table %>% kable_styling(latex_options = "striped"),
+    file = "tables/imputation-comparison-glrm.tex")
+
+rio::export(imput_comp, file = "tables/imputation-comparison-glrm.xlsx")
+```
+
+### Replace missing values.
+
+```{r replace_missing_values}
+
+# Now replace the missing values with imputed values.
+for (var in impute_compare$var) {
+  
+  # Analyze the rows in which the variable is not missing.
+  missing_rows = is.na(data[[var]])
+  
+  data[missing_rows, var] = recon_df[missing_rows, var]
+}
+
+# Should be all 0's.
+summary(colMeans(is.na(data)))
+colSums(is.na(data[, vars$predictors]))
+
+data = cbind(data, miss_inds)
+impute_info$data = NULL
+
+colnames(data)
+
+# Update the predictors with the new missingness indicators.
+(vars$predictors = setdiff(names(data), c(vars$exclude, vars$outcomes)))
+
+
+# Double-check missingness.
+colSums(is.na(data))
+```
+
+### Shutdown h2o
+
+This saves RAM, which is helpful especially on shared servers.
+
+```{r h2o_shutdown, error = TRUE}
+h2o::h2o.shutdown(prompt = FALSE)
+```
+
+## Update predictor summary
+
+```{r imputed_predictor_summary}
+result = summarize_vars(data, vars$predictors, groups = vars$groups)
+
+# Export as a spreadsheet
+# TODO: use prettier variable names for this export and the latex table.
+rio::export(result$table, file = "tables/predictor-summary-imputed.xlsx")
+
+# TODO: output as a kableExtra latex table.
+
+var_df = result$table
+data = result$data
+```
+
+## Histogram condense
+
+Apply histogram condensing to high-cardinality features
+
+```{r histogram_condense}
+uniq_val_threshold = 80L
+
+# These are the continuous vars with moderate or high missingness.
+(dense_vars = var_df[var_df$uniq_vals > uniq_val_threshold, c("var", "uniq_vals")])
+
+hist_bins = uniq_val_threshold
+
+for (dense_var in dense_vars$var) {
+  # Confirm it has a large number of unique values.
+  num_unique = length(unique(data[[dense_var]]))
+  if (num_unique > uniq_val_threshold) {
+    print(qplot(data[[dense_var]]) + theme_minimal() +
+      labs(x = dense_var, y = "original values"))
+    
+    # Try histogram binning vs. equal-sized group binning.
+    hist_vec2 = histogram::histogram(data[[dense_var]],
+                                     control = list(maxbin = hist_bins))
+    
+    # Apply histogram binning to original data vector.
+    cuts = cut(data[[dense_var]], breaks = hist_vec2$breaks,
+               # If we don't specify this, all obs with lowest value will get an NA.
+               include.lowest = TRUE)
+    
+    
+    # Use the midpoint of each bin as the new value.
+    mid_vals = hist_vec2$mids[as.numeric(cuts)]
+    
+    # Check for missing values in the dense vars.
+    if (sum(is.na(mid_vals)) > 0) {
+      stop("missing values in mid_vals")
+    }
+    
+    # Update variable to use the mid_vals
+    data[[dense_var]] = mid_vals
+    print(qplot(mid_vals) + labs(x = dense_var, y = "mid_vals") + theme_minimal())
+  }
+  
+}
+
+# Check for missing data.
+colSums(is.na(data[, dense_vars$var]))
+```
+
+## Update predictor summary
+
+```{r revised_summary_condensed}
+result = summarize_vars(data, vars$predictors, groups = vars$groups)
+
+# Export as a spreadsheet
+# TODO: use prettier variable names for this export and the latex table.
+rio::export(result$table, file = "tables/predictor-summary-imputed-condensed.xlsx")
+
+# TODO: output as a kableExtra latex table.
+var_df = result$table
+```
+
+## Save imputed dataset
+
+```{r save_imputed}
+save(data, vars, var_df,
+     file = "data/clean-impute.RData")
+```
+
+Next file: 3-clean-finalize.Rmd
+
