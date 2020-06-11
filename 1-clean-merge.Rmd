@@ -1,6 +1,9 @@
 ---
 title: "Clean data: merge"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -16,5 +19,190 @@ startup(auto_install = FALSE, verbose = FALSE)
 ck37r::load_all_code("R", verbose = TRUE)
 ```
 
-```{r}
+## Import raw data
+
+```{r import_raw}
+# Here "rio::" tells R to use the import() function specifically from the rio package.
+# This reminds us of which package supplies import(), and ensures that no other
+# package that provides import() could be used accidentally due to package loading order.
+data = rio::import("data-raw/heart.csv")
+
+# Check dimensions and variables.
+dim(data)
+names(data)
+
+# Lowercase variable names.
+(names(data) = tolower(names(data)))
 ```
+
+## Merge data
+
+```{r merge}
+# Merge raw dataframes here.
+# dplyr::left_join()
+```
+
+## Recoding
+
+```{r recode}
+# Recode any values here.
+```
+
+## Exclusions
+
+Exclude observations if desired.
+
+```{r exclusions}
+# Apply any exclusion criteria here.
+```
+
+## Categoricals to factors
+
+Ensure that any categorical variables are specified as factors and not numeric/integer variables.
+
+```{r cat_to_factor}
+# TODO: treat ordinal variables as ordinal rather than categorical.
+data = ck37r::categoricals_to_factors(data,
+              categoricals = c("sex", "ca", "cp", "slope", "thal"),
+              verbose = TRUE)
+
+# Inspect the updated data frame
+str(data)
+```
+
+## Data structure
+
+Specify the outcome variable name, variables excluded from the analysis, and predictor variables (covariates).
+
+```{r data_structure}
+vars =
+  list(
+    # Variables from exclude from analysis, such as ID fields.
+    exclude = c(NULL),
+    
+    # Outcome variables - could be one or multiple (e.g. sensitivity analyses).
+    outcomes = c("target"),
+    
+    # Predictor variables will be defined automatically in the next line of code.
+    predictors = NULL
+)
+
+# All remaining variables are considered predictors.
+(vars$predictors = setdiff(names(data), c(vars$exclude, vars$outcomes)))  
+```
+
+## Extreme value review
+
+```{r extreme_values}
+# Possibly recode certain extreme values, especially after reviewing the
+# predictor summary results (below).
+```
+
+## Remove constant predictors 
+
+We don't have any constant predictors but good to confirm.
+
+```{r remove_constants}
+
+# Count the unique values in each predictor, excluding NAs.
+unique_vals = sapply(data[, vars$predictors, drop = FALSE],
+                     # Make that we don't count NA as a unique value.
+                     function(col_vals) length(setdiff(unique(col_vals), NA)))
+
+# Looks good, no constant columns.
+summary(unique_vals)
+
+# Remove constant columns from the covariate file.
+constant_columns = vars$predictors[unique_vals < 2L]
+  
+if (length(constant_columns) > 0L) {
+  data = data[, !names(data) %in% constant_columns, drop = FALSE]
+  vars$predictors = setdiff(vars$predictors, constant_columns)
+}
+  
+cat("Removed", length(constant_columns), "constant predictors.\n")
+
+rm(constant_columns)
+```
+
+## Tutorial-only: add random missingness
+
+Our example dataset has no missingness, so for this tutorial we are artifically adding missingness.
+
+```{r add_missingness}
+# Add missingness to certain predictors.
+
+# Number of data cells to set to be missing.
+missing_cells = 50L
+
+set.seed(1)
+
+# Randomly sample 20 patients to have a missing value.
+miss_rows = sample(nrow(data), missing_cells, replace = TRUE)
+
+# Randomly select X predictors to have missingness.
+miss_preds = sample(vars$predictors, missing_cells, replace = TRUE)
+
+miss_df = data.frame(miss_rows, miss_preds, stringsAsFactors = FALSE)
+for (row_i in seq(nrow(miss_df))) {
+  row = miss_df[row_i, , drop = FALSE]
+  data[row$miss_rows, row$miss_preds] = NA
+}
+
+# Confirm that we now have some missing data.
+colSums(is.na(data))
+```
+
+
+## Summarize predictors
+
+We will use this to support:
+
+  * Review by the team, such as to identify additional cleaning of outliers
+  * To inform the loss functions used for GLRM interpretation, and
+  * As a possible table in the manuscript (supplemental info most likely).
+
+```{r predictor_summary}
+# Columns: variable name, type, # of unique values, mode, mean, median, min, max, missingness
+
+# Groups: demographic, biomarker, notes, score, clinical history (including family)
+vars$groups = list(
+  demo = c("age", "sex"),
+  vitals = c("trestbps"),
+  exam = c("cp", "thalach", "exang", "thal"),
+  labs = c("chol", "fbs"),
+  biomarkers = c("restecg", "oldpeak", "slope", "ca")
+)
+
+# Note which predictors we consider to be integers.
+(vars$integers = NULL)
+
+# Note which predictors are ordinal
+(vars$ordinal = NULL)
+
+vars
+
+# Could specify integers and ordinal arguments here.
+result = summarize_vars(data, vars = vars$predictors, groups = vars$groups)
+
+# Export as a spreadsheet
+# TODO: use prettier variable names for this export and the latex table.
+rio::export(result$table, file = "tables/predictor-summary-unimputed.xlsx")
+
+# TODO: output as a kableExtra latex table.
+
+var_df = result$table
+data = result$data
+
+```
+
+
+## Save unimputed dataset
+
+```{r save_unimputed}
+# Save both dataframe and the vars list that defines the data structure.
+save(data, vars, var_df,
+     file = "data/clean-merge-unimputed.RData")
+```
+
+Next file: 2-clean-impute.Rmd
