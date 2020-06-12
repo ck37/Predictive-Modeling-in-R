@@ -13,10 +13,10 @@ Run interactively in [RStudio Cloud](https://rstudio.cloud/project/1374321)
    * [1-clean-**merge**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/1-clean-merge.Rmd) - import and merge raw data, extreme values, constant predictors ([output](https://ck37.github.io/Data-Science-R/1-clean-merge.html))
    * [2-clean-**impute**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/2-clean-impute.Rmd) - analyze missingness, impute missing values, histogram condense ([output](https://ck37.github.io/Data-Science-R/2-clean-impute.html))
    * [3-clean-**finalize**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/3-clean-finalize.Rmd) - factors to indicators, collinearity, check invertability ([output](https://ck37.github.io/Data-Science-R/3-clean-finalize.html))
-   * [4-**eda**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/4-eda.Rmd) - exploratory data analysis
-   * [5-**modeling**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/5-modeling.Rmd) - random forest convergence, SuperLearner ensembling, and nested SuperLearner evaluation ([output](https://ck37.github.io/Data-Science-R/5-modeling.html))
+   * [4-**explore**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/4-explore.Rmd) - exploratory data analysis
+   * [5-**model**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/5-model.Rmd) - random forest convergence, SuperLearner ensembling, and nested SuperLearner evaluation ([output](https://ck37.github.io/Data-Science-R/5-modeling.html))
    * [6-**calibration**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/6-calibration.Rmd) - calibration of prediction
-   * [7-**interpretation**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/7-interpretation.Rmd) - variable importance and accumulated local effects ([output](https://ck37.github.io/Data-Science-R/7-interpretation.html))
+   * [7-**interpret**.Rmd](https://github.com/ck37/Data-Science-R/blob/master/7-interpret.Rmd) - variable importance and accumulated local effects ([output](https://ck37.github.io/Data-Science-R/7-interpretation.html))
  * **Directories**
    * [R/](https://github.com/ck37Data-Science-R/tree/master/R) - supplemental functions
      * [_startup.R](#tbd) - bootstraps the loading and potential installation of packages
@@ -25,7 +25,7 @@ Run interactively in [RStudio Cloud](https://rstudio.cloud/project/1374321)
    * [tables/](https://github.com/ck37/Data-Science-R/tree/master/tables) - results tables, primarily Latex or Excel
    * [visuals/](https://github.com/ck37/Data-Science-R/tree/master/visuals) - plots, primarily as png or PDF
  
-Ideally use bookdown, integrate renv, use slido, and add drake.
+Ideally integrate renv, use slido, and add drake.
 
 ## Recommended reading
 
