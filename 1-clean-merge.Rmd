@@ -1,12 +1,13 @@
 ---
-title: "Clean data: merge"
 output:
   html_document:
     toc: true
     toc_float: true
 ---
 
-```{r setup, include=FALSE}
+# Initial data import
+
+```{r setup_1, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 # This file provides the startup() function.
@@ -197,12 +198,10 @@ data = result$data
 ```
 
 
-## Save unimputed dataset
+## Save unimputed dataset {-}
 
 ```{r save_unimputed}
 # Save both dataframe and the vars list that defines the data structure.
 save(data, vars, var_df,
      file = "data/clean-merge-unimputed.RData")
 ```
-
-Next file: 2-clean-impute.Rmd

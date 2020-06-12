@@ -1,0 +1,18 @@
+--- 
+title: "Data science in R"
+author: "Chris J. Kennedy"
+date: "`r Sys.Date()`"
+site: "bookdown::bookdown_site"
+output:
+  bookdown::gitbook: default
+documentclass: book
+bibliography: ["book.bib", "packages.bib"]
+biblio-style: apalike
+link-citations: yes
+book_filename: "data-science-in-r"
+output_dir: "docs"
+language:
+  ui:
+    chapter_name: "Chapter "
+delete_merged_file: true
+---

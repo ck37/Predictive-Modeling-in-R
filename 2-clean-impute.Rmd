@@ -6,7 +6,9 @@ output:
     toc_float: true
 ---
 
-```{r setup, include=FALSE}
+# Missing values and imputation
+
+```{r setup_2, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 # This file provides the startup() function.
@@ -19,44 +21,14 @@ startup(auto_install = FALSE, verbose = FALSE)
 ck37r::load_all_code("R", verbose = TRUE)
 ```
 
-Previous file: 1-clean-merge.Rmd
-
 ## Load data
 
-```{r load_data}
+```{r load_data_2}
 # Created in 1-clean-merge.Rmd
 
 # Objects included: data, vars
 # renv also includes a load() method, so we specify base:: here.
 base::load("data/clean-merge-unimputed.RData")
-```
-
-## Tutorial-only: add random missingness
-
-Our example dataset has no missingness, so for this tutorial we are artifically adding missingness.
-
-```{r add_missingness}
-# Add missingness to certain predictors.
-
-# Number of data cells to set to be missing.
-missing_cells = 20L
-
-set.seed(1)
-
-# Randomly sample 20 patients to have a missing value.
-miss_rows = sample(nrow(data), missing_cells, replace = TRUE)
-
-# Randomly select X predictors to have missingness.
-miss_preds = sample(vars$predictors, missing_cells, replace = TRUE)
-
-miss_df = data.frame(miss_rows, miss_preds, stringsAsFactors = FALSE)
-for (row_i in seq(nrow(miss_df))) {
-  row = miss_df[row_i, , drop = FALSE]
-  data[row$miss_rows, row$miss_preds] = NA
-}
-
-# Confirm that we now have some missing data.
-colSums(is.na(data))
 ```
 
 ## Examine predictor missingness
@@ -322,7 +294,7 @@ h2o_df = h2o::as.h2o(impute_df)
 cbind(losses, h2o_types)
 ```
 
-### GLRM train/test split.
+### GLRM train/test split
 
 
 ```{r glrm_split}
@@ -383,9 +355,11 @@ params = params[sample(nrow(params)), ]
 params
 ```
 
-### GLRM grid search (manual)
+### GLRM grid search 
 
-```{r glrm_grid_search, eval = FALSE}
+The results of this block are cached because they are slow to compute.
+
+```{r glrm_grid_search, eval = TRUE, cache = TRUE}
 
 glrm_metrics = list()
 # Summary text
@@ -786,12 +760,9 @@ rio::export(result$table, file = "tables/predictor-summary-imputed-condensed.xls
 var_df = result$table
 ```
 
-## Save imputed dataset
+## Save imputed dataset {-}
 
 ```{r save_imputed}
 save(data, vars, var_df,
      file = "data/clean-impute.RData")
 ```
-
-Next file: 3-clean-finalize.Rmd
-

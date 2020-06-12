@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Data science in R</title>
+  <meta name="description" content="An applied tutorial" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Data science in R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="An applied tutorial" />
+  <meta name="github-repo" content="ck37/Data-Science-R" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Data science in R" />
+  
+  <meta name="twitter:description" content="An applied tutorial" />
+  
+
+
+
+<meta name="date" content="2020-06-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="initial-data-import.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#rmarkdown-files"><i class="fa fa-check"></i><b>1.1</b> RMarkdown files</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#directory-structure"><i class="fa fa-check"></i><b>1.2</b> Directory structure</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="initial-data-import.html"><a href="initial-data-import.html"><i class="fa fa-check"></i><b>2</b> Initial data import</a><ul>
+<li class="chapter" data-level="2.1" data-path="initial-data-import.html"><a href="initial-data-import.html#import-raw-data"><i class="fa fa-check"></i><b>2.1</b> Import raw data</a></li>
+<li class="chapter" data-level="2.2" data-path="initial-data-import.html"><a href="initial-data-import.html#merge-data"><i class="fa fa-check"></i><b>2.2</b> Merge data</a></li>
+<li class="chapter" data-level="2.3" data-path="initial-data-import.html"><a href="initial-data-import.html#recoding"><i class="fa fa-check"></i><b>2.3</b> Recoding</a></li>
+<li class="chapter" data-level="2.4" data-path="initial-data-import.html"><a href="initial-data-import.html#exclusions"><i class="fa fa-check"></i><b>2.4</b> Exclusions</a></li>
+<li class="chapter" data-level="2.5" data-path="initial-data-import.html"><a href="initial-data-import.html#categoricals-to-factors"><i class="fa fa-check"></i><b>2.5</b> Categoricals to factors</a></li>
+<li class="chapter" data-level="2.6" data-path="initial-data-import.html"><a href="initial-data-import.html#data-structure"><i class="fa fa-check"></i><b>2.6</b> Data structure</a></li>
+<li class="chapter" data-level="2.7" data-path="initial-data-import.html"><a href="initial-data-import.html#extreme-value-review"><i class="fa fa-check"></i><b>2.7</b> Extreme value review</a></li>
+<li class="chapter" data-level="2.8" data-path="initial-data-import.html"><a href="initial-data-import.html#remove-constant-predictors"><i class="fa fa-check"></i><b>2.8</b> Remove constant predictors</a></li>
+<li class="chapter" data-level="2.9" data-path="initial-data-import.html"><a href="initial-data-import.html#tutorial-only-add-random-missingness"><i class="fa fa-check"></i><b>2.9</b> Tutorial-only: add random missingness</a></li>
+<li class="chapter" data-level="2.10" data-path="initial-data-import.html"><a href="initial-data-import.html#summarize-predictors"><i class="fa fa-check"></i><b>2.10</b> Summarize predictors</a></li>
+<li class="chapter" data-level="" data-path="initial-data-import.html"><a href="initial-data-import.html#save-unimputed-dataset"><i class="fa fa-check"></i>Save unimputed dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html"><i class="fa fa-check"></i><b>3</b> Missing values and imputation</a><ul>
+<li class="chapter" data-level="3.1" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#load-data"><i class="fa fa-check"></i><b>3.1</b> Load data</a></li>
+<li class="chapter" data-level="3.2" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#examine-predictor-missingness"><i class="fa fa-check"></i><b>3.2</b> Examine predictor missingness</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#missingness-table"><i class="fa fa-check"></i><b>3.2.1</b> Missingness table</a></li>
+<li class="chapter" data-level="3.2.2" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#missingness-heatmap"><i class="fa fa-check"></i><b>3.2.2</b> Missingness heatmap</a></li>
+<li class="chapter" data-level="3.2.3" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#missingness-count-plot"><i class="fa fa-check"></i><b>3.2.3</b> Missingness count plot</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#examine-outcome-missingness"><i class="fa fa-check"></i><b>3.3</b> Examine outcome missingness</a></li>
+<li class="chapter" data-level="3.4" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#impute-missing-predictor-values"><i class="fa fa-check"></i><b>3.4</b> Impute missing predictor values</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#missingness-indicators"><i class="fa fa-check"></i><b>3.4.1</b> Missingness indicators</a></li>
+<li class="chapter" data-level="3.4.2" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#impute-to-0"><i class="fa fa-check"></i><b>3.4.2</b> Impute to 0</a></li>
+<li class="chapter" data-level="3.4.3" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#glrm-prep"><i class="fa fa-check"></i><b>3.4.3</b> GLRM prep</a></li>
+<li class="chapter" data-level="3.4.4" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#start-h2o"><i class="fa fa-check"></i><b>3.4.4</b> Start h2o</a></li>
+<li class="chapter" data-level="3.4.5" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#load-data-into-h2o"><i class="fa fa-check"></i><b>3.4.5</b> Load data into h2o</a></li>
+<li class="chapter" data-level="3.4.6" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#glrm-traintest-split"><i class="fa fa-check"></i><b>3.4.6</b> GLRM train/test split</a></li>
+<li class="chapter" data-level="3.4.7" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#define-glrm-grid"><i class="fa fa-check"></i><b>3.4.7</b> Define GLRM grid</a></li>
+<li class="chapter" data-level="3.4.8" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#glrm-grid-search"><i class="fa fa-check"></i><b>3.4.8</b> GLRM grid search</a></li>
+<li class="chapter" data-level="3.4.9" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#apply-best-glrm"><i class="fa fa-check"></i><b>3.4.9</b> Apply best GLRM</a></li>
+<li class="chapter" data-level="3.4.10" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#review-glrm"><i class="fa fa-check"></i><b>3.4.10</b> Review GLRM</a></li>
+<li class="chapter" data-level="3.4.11" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#evaluate-imputation"><i class="fa fa-check"></i><b>3.4.11</b> Evaluate imputation</a></li>
+<li class="chapter" data-level="3.4.12" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#replace-missing-values."><i class="fa fa-check"></i><b>3.4.12</b> Replace missing values.</a></li>
+<li class="chapter" data-level="3.4.13" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#shutdown-h2o"><i class="fa fa-check"></i><b>3.4.13</b> Shutdown h2o</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#update-predictor-summary"><i class="fa fa-check"></i><b>3.5</b> Update predictor summary</a></li>
+<li class="chapter" data-level="3.6" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#histogram-condense"><i class="fa fa-check"></i><b>3.6</b> Histogram condense</a></li>
+<li class="chapter" data-level="3.7" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#update-predictor-summary-1"><i class="fa fa-check"></i><b>3.7</b> Update predictor summary</a></li>
+<li class="chapter" data-level="" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#save-imputed-dataset"><i class="fa fa-check"></i>Save imputed dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="dataset-finalization.html"><a href="dataset-finalization.html"><i class="fa fa-check"></i><b>4</b> Dataset finalization</a><ul>
+<li class="chapter" data-level="" data-path="dataset-finalization.html"><a href="dataset-finalization.html#load-data-1"><i class="fa fa-check"></i>Load data</a></li>
+<li class="chapter" data-level="4.1" data-path="dataset-finalization.html"><a href="dataset-finalization.html#factors-to-indicators"><i class="fa fa-check"></i><b>4.1</b> Factors to indicators</a></li>
+<li class="chapter" data-level="4.2" data-path="dataset-finalization.html"><a href="dataset-finalization.html#remove-collinear-predictors"><i class="fa fa-check"></i><b>4.2</b> Remove collinear predictors</a></li>
+<li class="chapter" data-level="4.3" data-path="dataset-finalization.html"><a href="dataset-finalization.html#confirm-predictor-matrix-invertability"><i class="fa fa-check"></i><b>4.3</b> Confirm predictor matrix invertability</a></li>
+<li class="chapter" data-level="" data-path="dataset-finalization.html"><a href="dataset-finalization.html#save-finalized-dataset"><i class="fa fa-check"></i>Save finalized dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory data analysis</a><ul>
+<li class="chapter" data-level="" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#load-data-2"><i class="fa fa-check"></i>Load data</a></li>
+<li class="chapter" data-level="" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#tbd"><i class="fa fa-check"></i>TBD</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="modeling.html"><a href="modeling.html"><i class="fa fa-check"></i><b>6</b> Modeling</a><ul>
+<li class="chapter" data-level="" data-path="modeling.html"><a href="modeling.html#load-data-3"><i class="fa fa-check"></i>Load data</a></li>
+<li class="chapter" data-level="6.1" data-path="modeling.html"><a href="modeling.html#random-forest"><i class="fa fa-check"></i><b>6.1</b> Random forest</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="modeling.html"><a href="modeling.html#rf-convergence-plot"><i class="fa fa-check"></i><b>6.1.1</b> RF convergence plot</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="modeling.html"><a href="modeling.html#ensemble"><i class="fa fa-check"></i><b>6.2</b> Ensemble</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="modeling.html"><a href="modeling.html#prep-sl-library"><i class="fa fa-check"></i><b>6.2.1</b> Prep SL library</a></li>
+<li class="chapter" data-level="6.2.2" data-path="modeling.html"><a href="modeling.html#estimate-superlearner"><i class="fa fa-check"></i><b>6.2.2</b> Estimate SuperLearner</a></li>
+<li class="chapter" data-level="6.2.3" data-path="modeling.html"><a href="modeling.html#review-sl-results"><i class="fa fa-check"></i><b>6.2.3</b> Review SL results</a></li>
+<li class="chapter" data-level="6.2.4" data-path="modeling.html"><a href="modeling.html#sl-pr-auc"><i class="fa fa-check"></i><b>6.2.4</b> SL PR-AUC</a></li>
+<li class="chapter" data-level="6.2.5" data-path="modeling.html"><a href="modeling.html#sl-plots"><i class="fa fa-check"></i><b>6.2.5</b> SL plots</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="modeling.html"><a href="modeling.html#nested-ensemble"><i class="fa fa-check"></i><b>6.3</b> Nested ensemble</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="modeling.html"><a href="modeling.html#ensemble-weights"><i class="fa fa-check"></i><b>6.3.1</b> Ensemble weights</a></li>
+<li class="chapter" data-level="6.3.2" data-path="modeling.html"><a href="modeling.html#auc-analysis"><i class="fa fa-check"></i><b>6.3.2</b> AUC analysis</a></li>
+<li class="chapter" data-level="6.3.3" data-path="modeling.html"><a href="modeling.html#precision-recall-analysis"><i class="fa fa-check"></i><b>6.3.3</b> Precision-Recall analysis</a></li>
+<li class="chapter" data-level="6.3.4" data-path="modeling.html"><a href="modeling.html#brier-score"><i class="fa fa-check"></i><b>6.3.4</b> Brier score</a></li>
+<li class="chapter" data-level="6.3.5" data-path="modeling.html"><a href="modeling.html#index-of-prediction-accuracy"><i class="fa fa-check"></i><b>6.3.5</b> Index of prediction accuracy</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="calibration.html"><a href="calibration.html"><i class="fa fa-check"></i><b>7</b> Calibration</a><ul>
+<li class="chapter" data-level="" data-path="calibration.html"><a href="calibration.html#tbd-1"><i class="fa fa-check"></i>TBD</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="interpretation.html"><a href="interpretation.html"><i class="fa fa-check"></i><b>8</b> Interpretation</a><ul>
+<li class="chapter" data-level="" data-path="interpretation.html"><a href="interpretation.html#load-data-4"><i class="fa fa-check"></i>Load data</a></li>
+<li class="chapter" data-level="8.1" data-path="interpretation.html"><a href="interpretation.html#variable-importance"><i class="fa fa-check"></i><b>8.1</b> Variable importance</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="interpretation.html"><a href="interpretation.html#random-forest-1"><i class="fa fa-check"></i><b>8.1.1</b> Random forest</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="interpretation.html"><a href="interpretation.html#accumulated-local-effect-plots"><i class="fa fa-check"></i><b>8.2</b> Accumulated local effect plots</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data science in R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">Data science in R</h1>
+<p class="date"><em>2020-06-11</em></p>
+</div>
+<div id="overview" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> Overview</h1>
+<p>(Add introduction sections on RMarkdown, directory structure, packages used, etc.)</p>
+<div id="rmarkdown-files" class="section level2">
+<h2><span class="header-section-number">1.1</span> RMarkdown files</h2>
+</div>
+<div id="directory-structure" class="section level2">
+<h2><span class="header-section-number">1.2</span> Directory structure</h2>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="initial-data-import.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

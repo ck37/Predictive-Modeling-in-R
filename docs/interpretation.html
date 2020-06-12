@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 Interpretation | Data science in R</title>
+  <meta name="description" content="An applied tutorial" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 8 Interpretation | Data science in R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="An applied tutorial" />
+  <meta name="github-repo" content="ck37/Data-Science-R" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 Interpretation | Data science in R" />
+  
+  <meta name="twitter:description" content="An applied tutorial" />
+  
+
+
+
+<meta name="date" content="2020-06-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="calibration.html"/>
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#rmarkdown-files"><i class="fa fa-check"></i><b>1.1</b> RMarkdown files</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#directory-structure"><i class="fa fa-check"></i><b>1.2</b> Directory structure</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="initial-data-import.html"><a href="initial-data-import.html"><i class="fa fa-check"></i><b>2</b> Initial data import</a><ul>
+<li class="chapter" data-level="2.1" data-path="initial-data-import.html"><a href="initial-data-import.html#import-raw-data"><i class="fa fa-check"></i><b>2.1</b> Import raw data</a></li>
+<li class="chapter" data-level="2.2" data-path="initial-data-import.html"><a href="initial-data-import.html#merge-data"><i class="fa fa-check"></i><b>2.2</b> Merge data</a></li>
+<li class="chapter" data-level="2.3" data-path="initial-data-import.html"><a href="initial-data-import.html#recoding"><i class="fa fa-check"></i><b>2.3</b> Recoding</a></li>
+<li class="chapter" data-level="2.4" data-path="initial-data-import.html"><a href="initial-data-import.html#exclusions"><i class="fa fa-check"></i><b>2.4</b> Exclusions</a></li>
+<li class="chapter" data-level="2.5" data-path="initial-data-import.html"><a href="initial-data-import.html#categoricals-to-factors"><i class="fa fa-check"></i><b>2.5</b> Categoricals to factors</a></li>
+<li class="chapter" data-level="2.6" data-path="initial-data-import.html"><a href="initial-data-import.html#data-structure"><i class="fa fa-check"></i><b>2.6</b> Data structure</a></li>
+<li class="chapter" data-level="2.7" data-path="initial-data-import.html"><a href="initial-data-import.html#extreme-value-review"><i class="fa fa-check"></i><b>2.7</b> Extreme value review</a></li>
+<li class="chapter" data-level="2.8" data-path="initial-data-import.html"><a href="initial-data-import.html#remove-constant-predictors"><i class="fa fa-check"></i><b>2.8</b> Remove constant predictors</a></li>
+<li class="chapter" data-level="2.9" data-path="initial-data-import.html"><a href="initial-data-import.html#tutorial-only-add-random-missingness"><i class="fa fa-check"></i><b>2.9</b> Tutorial-only: add random missingness</a></li>
+<li class="chapter" data-level="2.10" data-path="initial-data-import.html"><a href="initial-data-import.html#summarize-predictors"><i class="fa fa-check"></i><b>2.10</b> Summarize predictors</a></li>
+<li class="chapter" data-level="" data-path="initial-data-import.html"><a href="initial-data-import.html#save-unimputed-dataset"><i class="fa fa-check"></i>Save unimputed dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html"><i class="fa fa-check"></i><b>3</b> Missing values and imputation</a><ul>
+<li class="chapter" data-level="3.1" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#load-data"><i class="fa fa-check"></i><b>3.1</b> Load data</a></li>
+<li class="chapter" data-level="3.2" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#examine-predictor-missingness"><i class="fa fa-check"></i><b>3.2</b> Examine predictor missingness</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#missingness-table"><i class="fa fa-check"></i><b>3.2.1</b> Missingness table</a></li>
+<li class="chapter" data-level="3.2.2" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#missingness-heatmap"><i class="fa fa-check"></i><b>3.2.2</b> Missingness heatmap</a></li>
+<li class="chapter" data-level="3.2.3" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#missingness-count-plot"><i class="fa fa-check"></i><b>3.2.3</b> Missingness count plot</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#examine-outcome-missingness"><i class="fa fa-check"></i><b>3.3</b> Examine outcome missingness</a></li>
+<li class="chapter" data-level="3.4" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#impute-missing-predictor-values"><i class="fa fa-check"></i><b>3.4</b> Impute missing predictor values</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#missingness-indicators"><i class="fa fa-check"></i><b>3.4.1</b> Missingness indicators</a></li>
+<li class="chapter" data-level="3.4.2" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#impute-to-0"><i class="fa fa-check"></i><b>3.4.2</b> Impute to 0</a></li>
+<li class="chapter" data-level="3.4.3" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#glrm-prep"><i class="fa fa-check"></i><b>3.4.3</b> GLRM prep</a></li>
+<li class="chapter" data-level="3.4.4" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#start-h2o"><i class="fa fa-check"></i><b>3.4.4</b> Start h2o</a></li>
+<li class="chapter" data-level="3.4.5" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#load-data-into-h2o"><i class="fa fa-check"></i><b>3.4.5</b> Load data into h2o</a></li>
+<li class="chapter" data-level="3.4.6" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#glrm-traintest-split"><i class="fa fa-check"></i><b>3.4.6</b> GLRM train/test split</a></li>
+<li class="chapter" data-level="3.4.7" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#define-glrm-grid"><i class="fa fa-check"></i><b>3.4.7</b> Define GLRM grid</a></li>
+<li class="chapter" data-level="3.4.8" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#glrm-grid-search"><i class="fa fa-check"></i><b>3.4.8</b> GLRM grid search</a></li>
+<li class="chapter" data-level="3.4.9" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#apply-best-glrm"><i class="fa fa-check"></i><b>3.4.9</b> Apply best GLRM</a></li>
+<li class="chapter" data-level="3.4.10" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#review-glrm"><i class="fa fa-check"></i><b>3.4.10</b> Review GLRM</a></li>
+<li class="chapter" data-level="3.4.11" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#evaluate-imputation"><i class="fa fa-check"></i><b>3.4.11</b> Evaluate imputation</a></li>
+<li class="chapter" data-level="3.4.12" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#replace-missing-values."><i class="fa fa-check"></i><b>3.4.12</b> Replace missing values.</a></li>
+<li class="chapter" data-level="3.4.13" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#shutdown-h2o"><i class="fa fa-check"></i><b>3.4.13</b> Shutdown h2o</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#update-predictor-summary"><i class="fa fa-check"></i><b>3.5</b> Update predictor summary</a></li>
+<li class="chapter" data-level="3.6" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#histogram-condense"><i class="fa fa-check"></i><b>3.6</b> Histogram condense</a></li>
+<li class="chapter" data-level="3.7" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#update-predictor-summary-1"><i class="fa fa-check"></i><b>3.7</b> Update predictor summary</a></li>
+<li class="chapter" data-level="" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#save-imputed-dataset"><i class="fa fa-check"></i>Save imputed dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="dataset-finalization.html"><a href="dataset-finalization.html"><i class="fa fa-check"></i><b>4</b> Dataset finalization</a><ul>
+<li class="chapter" data-level="" data-path="dataset-finalization.html"><a href="dataset-finalization.html#load-data-1"><i class="fa fa-check"></i>Load data</a></li>
+<li class="chapter" data-level="4.1" data-path="dataset-finalization.html"><a href="dataset-finalization.html#factors-to-indicators"><i class="fa fa-check"></i><b>4.1</b> Factors to indicators</a></li>
+<li class="chapter" data-level="4.2" data-path="dataset-finalization.html"><a href="dataset-finalization.html#remove-collinear-predictors"><i class="fa fa-check"></i><b>4.2</b> Remove collinear predictors</a></li>
+<li class="chapter" data-level="4.3" data-path="dataset-finalization.html"><a href="dataset-finalization.html#confirm-predictor-matrix-invertability"><i class="fa fa-check"></i><b>4.3</b> Confirm predictor matrix invertability</a></li>
+<li class="chapter" data-level="" data-path="dataset-finalization.html"><a href="dataset-finalization.html#save-finalized-dataset"><i class="fa fa-check"></i>Save finalized dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory data analysis</a><ul>
+<li class="chapter" data-level="" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#load-data-2"><i class="fa fa-check"></i>Load data</a></li>
+<li class="chapter" data-level="" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#tbd"><i class="fa fa-check"></i>TBD</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="modeling.html"><a href="modeling.html"><i class="fa fa-check"></i><b>6</b> Modeling</a><ul>
+<li class="chapter" data-level="" data-path="modeling.html"><a href="modeling.html#load-data-3"><i class="fa fa-check"></i>Load data</a></li>
+<li class="chapter" data-level="6.1" data-path="modeling.html"><a href="modeling.html#random-forest"><i class="fa fa-check"></i><b>6.1</b> Random forest</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="modeling.html"><a href="modeling.html#rf-convergence-plot"><i class="fa fa-check"></i><b>6.1.1</b> RF convergence plot</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="modeling.html"><a href="modeling.html#ensemble"><i class="fa fa-check"></i><b>6.2</b> Ensemble</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="modeling.html"><a href="modeling.html#prep-sl-library"><i class="fa fa-check"></i><b>6.2.1</b> Prep SL library</a></li>
+<li class="chapter" data-level="6.2.2" data-path="modeling.html"><a href="modeling.html#estimate-superlearner"><i class="fa fa-check"></i><b>6.2.2</b> Estimate SuperLearner</a></li>
+<li class="chapter" data-level="6.2.3" data-path="modeling.html"><a href="modeling.html#review-sl-results"><i class="fa fa-check"></i><b>6.2.3</b> Review SL results</a></li>
+<li class="chapter" data-level="6.2.4" data-path="modeling.html"><a href="modeling.html#sl-pr-auc"><i class="fa fa-check"></i><b>6.2.4</b> SL PR-AUC</a></li>
+<li class="chapter" data-level="6.2.5" data-path="modeling.html"><a href="modeling.html#sl-plots"><i class="fa fa-check"></i><b>6.2.5</b> SL plots</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="modeling.html"><a href="modeling.html#nested-ensemble"><i class="fa fa-check"></i><b>6.3</b> Nested ensemble</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="modeling.html"><a href="modeling.html#ensemble-weights"><i class="fa fa-check"></i><b>6.3.1</b> Ensemble weights</a></li>
+<li class="chapter" data-level="6.3.2" data-path="modeling.html"><a href="modeling.html#auc-analysis"><i class="fa fa-check"></i><b>6.3.2</b> AUC analysis</a></li>
+<li class="chapter" data-level="6.3.3" data-path="modeling.html"><a href="modeling.html#precision-recall-analysis"><i class="fa fa-check"></i><b>6.3.3</b> Precision-Recall analysis</a></li>
+<li class="chapter" data-level="6.3.4" data-path="modeling.html"><a href="modeling.html#brier-score"><i class="fa fa-check"></i><b>6.3.4</b> Brier score</a></li>
+<li class="chapter" data-level="6.3.5" data-path="modeling.html"><a href="modeling.html#index-of-prediction-accuracy"><i class="fa fa-check"></i><b>6.3.5</b> Index of prediction accuracy</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="calibration.html"><a href="calibration.html"><i class="fa fa-check"></i><b>7</b> Calibration</a><ul>
+<li class="chapter" data-level="" data-path="calibration.html"><a href="calibration.html#tbd-1"><i class="fa fa-check"></i>TBD</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="interpretation.html"><a href="interpretation.html"><i class="fa fa-check"></i><b>8</b> Interpretation</a><ul>
+<li class="chapter" data-level="" data-path="interpretation.html"><a href="interpretation.html#load-data-4"><i class="fa fa-check"></i>Load data</a></li>
+<li class="chapter" data-level="8.1" data-path="interpretation.html"><a href="interpretation.html#variable-importance"><i class="fa fa-check"></i><b>8.1</b> Variable importance</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="interpretation.html"><a href="interpretation.html#random-forest-1"><i class="fa fa-check"></i><b>8.1.1</b> Random forest</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="interpretation.html"><a href="interpretation.html#accumulated-local-effect-plots"><i class="fa fa-check"></i><b>8.2</b> Accumulated local effect plots</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data science in R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="interpretation" class="section level1">
+<h1><span class="header-section-number">Chapter 8</span> Interpretation</h1>
+<div id="load-data-4" class="section level2 unnumbered">
+<h2>Load data</h2>
+<div class="sourceCode" id="cb485"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb485-1"><a href="interpretation.html#cb485-1"></a><span class="co"># Created in 3-clean-finalize.Rmd</span></span>
+<span id="cb485-2"><a href="interpretation.html#cb485-2"></a><span class="co"># Objects included: data, vars, var_df</span></span>
+<span id="cb485-3"><a href="interpretation.html#cb485-3"></a><span class="co"># renv also includes a load() method, so we specify base:: here.</span></span>
+<span id="cb485-4"><a href="interpretation.html#cb485-4"></a>base<span class="op">::</span><span class="kw">load</span>(<span class="st">&quot;data/clean-finalize-imputed.RData&quot;</span>)</span></code></pre></div>
+</div>
+<div id="variable-importance" class="section level2">
+<h2><span class="header-section-number">8.1</span> Variable importance</h2>
+<div id="random-forest-1" class="section level3">
+<h3><span class="header-section-number">8.1.1</span> Random forest</h3>
+<div class="sourceCode" id="cb486"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb486-1"><a href="interpretation.html#cb486-1"></a><span class="co"># Created in 5-modeling.Rmd</span></span>
+<span id="cb486-2"><a href="interpretation.html#cb486-2"></a>base<span class="op">::</span><span class="kw">load</span>(<span class="st">&quot;data/model-rf.RData&quot;</span>)</span>
+<span id="cb486-3"><a href="interpretation.html#cb486-3"></a></span>
+<span id="cb486-4"><a href="interpretation.html#cb486-4"></a>rf_imp =<span class="st"> </span>ranger<span class="op">::</span><span class="kw">importance</span>(rf)</span>
+<span id="cb486-5"><a href="interpretation.html#cb486-5"></a><span class="co"># Sort by descending importance.</span></span>
+<span id="cb486-6"><a href="interpretation.html#cb486-6"></a>rf_imp =<span class="st"> </span>rf_imp[<span class="kw">order</span>(rf_imp, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>)]</span>
+<span id="cb486-7"><a href="interpretation.html#cb486-7"></a></span>
+<span id="cb486-8"><a href="interpretation.html#cb486-8"></a><span class="co"># Review top 10 real quick.</span></span>
+<span id="cb486-9"><a href="interpretation.html#cb486-9"></a><span class="kw">round</span>(rf_imp, <span class="dv">4</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</span></code></pre></div>
+<pre><code>##  thal_2  thal_3 oldpeak   exang thalach    ca_1    cp_2   sex_1 slope_2    ca_2 
+##  0.0344  0.0273  0.0271  0.0162  0.0157  0.0135  0.0131  0.0130  0.0108  0.0079</code></pre>
+<div class="sourceCode" id="cb488"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb488-1"><a href="interpretation.html#cb488-1"></a>print_imp =<span class="st"> </span><span class="kw">as.data.frame</span>(rf_imp[, <span class="dt">drop =</span> <span class="ot">FALSE</span>])</span>
+<span id="cb488-2"><a href="interpretation.html#cb488-2"></a></span>
+<span id="cb488-3"><a href="interpretation.html#cb488-3"></a>print_imp</span></code></pre></div>
+<pre><code>##              rf_imp[, drop = FALSE]
+## thal_2                 3.442978e-02
+## thal_3                 2.731880e-02
+## oldpeak                2.707896e-02
+## exang                  1.620580e-02
+## thalach                1.574323e-02
+## ca_1                   1.345678e-02
+## cp_2                   1.306690e-02
+## sex_1                  1.296439e-02
+## slope_2                1.077906e-02
+## ca_2                   7.938321e-03
+## slope_1                7.608534e-03
+## age                    7.582580e-03
+## cp_1                   5.827836e-03
+## ca_3                   4.018786e-03
+## trestbps               3.535718e-03
+## cp_3                   3.075328e-03
+## miss_cp                4.801077e-04
+## restecg                3.609495e-04
+## chol                   3.543085e-04
+## thal_1                 6.954854e-05
+## miss_thalach           5.743442e-05
+## miss_exang             0.000000e+00
+## fbs                   -2.573076e-06
+## miss_fbs              -1.383069e-05
+## miss_sex              -2.181920e-05
+## miss_oldpeak          -4.607897e-05
+## ca_4                  -9.516181e-05
+## miss_ca               -1.153608e-04
+## miss_restecg          -1.304717e-04
+## miss_age              -1.422576e-04
+## miss_slope            -1.479793e-04
+## miss_chol             -1.586197e-04
+## miss_thal             -2.750506e-04</code></pre>
+<div class="sourceCode" id="cb490"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb490-1"><a href="interpretation.html#cb490-1"></a><span class="co"># Mean decrease in accuracy.</span></span>
+<span id="cb490-2"><a href="interpretation.html#cb490-2"></a><span class="kw">colnames</span>(print_imp) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;mean_dec_acc&quot;</span>)</span>
+<span id="cb490-3"><a href="interpretation.html#cb490-3"></a></span>
+<span id="cb490-4"><a href="interpretation.html#cb490-4"></a>print_imp<span class="op">$</span>var =<span class="st"> </span><span class="kw">rownames</span>(print_imp)</span>
+<span id="cb490-5"><a href="interpretation.html#cb490-5"></a>print_imp2 =<span class="st"> </span>print_imp</span>
+<span id="cb490-6"><a href="interpretation.html#cb490-6"></a></span>
+<span id="cb490-7"><a href="interpretation.html#cb490-7"></a><span class="co"># Add ranking to the rownames.</span></span>
+<span id="cb490-8"><a href="interpretation.html#cb490-8"></a>print_imp2<span class="op">$</span>var =<span class="st"> </span><span class="kw">paste0</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(print_imp2), <span class="st">&quot;. &quot;</span>, print_imp2<span class="op">$</span>var)</span>
+<span id="cb490-9"><a href="interpretation.html#cb490-9"></a>print_imp2</span></code></pre></div>
+<pre><code>##               mean_dec_acc              var
+## thal_2        3.442978e-02        1. thal_2
+## thal_3        2.731880e-02        2. thal_3
+## oldpeak       2.707896e-02       3. oldpeak
+## exang         1.620580e-02         4. exang
+## thalach       1.574323e-02       5. thalach
+## ca_1          1.345678e-02          6. ca_1
+## cp_2          1.306690e-02          7. cp_2
+## sex_1         1.296439e-02         8. sex_1
+## slope_2       1.077906e-02       9. slope_2
+## ca_2          7.938321e-03         10. ca_2
+## slope_1       7.608534e-03      11. slope_1
+## age           7.582580e-03          12. age
+## cp_1          5.827836e-03         13. cp_1
+## ca_3          4.018786e-03         14. ca_3
+## trestbps      3.535718e-03     15. trestbps
+## cp_3          3.075328e-03         16. cp_3
+## miss_cp       4.801077e-04      17. miss_cp
+## restecg       3.609495e-04      18. restecg
+## chol          3.543085e-04         19. chol
+## thal_1        6.954854e-05       20. thal_1
+## miss_thalach  5.743442e-05 21. miss_thalach
+## miss_exang    0.000000e+00   22. miss_exang
+## fbs          -2.573076e-06          23. fbs
+## miss_fbs     -1.383069e-05     24. miss_fbs
+## miss_sex     -2.181920e-05     25. miss_sex
+## miss_oldpeak -4.607897e-05 26. miss_oldpeak
+## ca_4         -9.516181e-05         27. ca_4
+## miss_ca      -1.153608e-04      28. miss_ca
+## miss_restecg -1.304717e-04 29. miss_restecg
+## miss_age     -1.422576e-04     30. miss_age
+## miss_slope   -1.479793e-04   31. miss_slope
+## miss_chol    -1.586197e-04    32. miss_chol
+## miss_thal    -2.750506e-04    33. miss_thal</code></pre>
+<div class="sourceCode" id="cb492"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb492-1"><a href="interpretation.html#cb492-1"></a><span class="kw">colnames</span>(print_imp2)[<span class="dv">2</span>] =<span class="st"> &quot;Variable&quot;</span></span>
+<span id="cb492-2"><a href="interpretation.html#cb492-2"></a></span>
+<span id="cb492-3"><a href="interpretation.html#cb492-3"></a><span class="co"># Reverse ordering of columns.</span></span>
+<span id="cb492-4"><a href="interpretation.html#cb492-4"></a>print_imp2 =<span class="st"> </span>print_imp2[, <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)]</span>
+<span id="cb492-5"><a href="interpretation.html#cb492-5"></a></span>
+<span id="cb492-6"><a href="interpretation.html#cb492-6"></a><span class="kw">rownames</span>(print_imp2) =<span class="st"> </span><span class="ot">NULL</span></span>
+<span id="cb492-7"><a href="interpretation.html#cb492-7"></a></span>
+<span id="cb492-8"><a href="interpretation.html#cb492-8"></a><span class="co">#</span></span>
+<span id="cb492-9"><a href="interpretation.html#cb492-9"></a><span class="co">#print_imp2 = print_imp2[, c(&quot;Variable&quot;, &quot;Mean Decrease Accuracy (%)&quot;)]#, &quot;Description&quot;)]</span></span>
+<span id="cb492-10"><a href="interpretation.html#cb492-10"></a><span class="co">#print_imp2 = print_imp2[, c(&quot;Variable&quot;, &quot;\thead{Mean\\{}Decrease\\{}Accuracy (%)}&quot;)]#, &quot;Description&quot;)]</span></span>
+<span id="cb492-11"><a href="interpretation.html#cb492-11"></a>print_imp2</span></code></pre></div>
+<pre><code>##            Variable  mean_dec_acc
+## 1         1. thal_2  3.442978e-02
+## 2         2. thal_3  2.731880e-02
+## 3        3. oldpeak  2.707896e-02
+## 4          4. exang  1.620580e-02
+## 5        5. thalach  1.574323e-02
+## 6           6. ca_1  1.345678e-02
+## 7           7. cp_2  1.306690e-02
+## 8          8. sex_1  1.296439e-02
+## 9        9. slope_2  1.077906e-02
+## 10         10. ca_2  7.938321e-03
+## 11      11. slope_1  7.608534e-03
+## 12          12. age  7.582580e-03
+## 13         13. cp_1  5.827836e-03
+## 14         14. ca_3  4.018786e-03
+## 15     15. trestbps  3.535718e-03
+## 16         16. cp_3  3.075328e-03
+## 17      17. miss_cp  4.801077e-04
+## 18      18. restecg  3.609495e-04
+## 19         19. chol  3.543085e-04
+## 20       20. thal_1  6.954854e-05
+## 21 21. miss_thalach  5.743442e-05
+## 22   22. miss_exang  0.000000e+00
+## 23          23. fbs -2.573076e-06
+## 24     24. miss_fbs -1.383069e-05
+## 25     25. miss_sex -2.181920e-05
+## 26 26. miss_oldpeak -4.607897e-05
+## 27         27. ca_4 -9.516181e-05
+## 28      28. miss_ca -1.153608e-04
+## 29 29. miss_restecg -1.304717e-04
+## 30     30. miss_age -1.422576e-04
+## 31   31. miss_slope -1.479793e-04
+## 32    32. miss_chol -1.586197e-04
+## 33    33. miss_thal -2.750506e-04</code></pre>
+<div class="sourceCode" id="cb494"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb494-1"><a href="interpretation.html#cb494-1"></a><span class="co"># Convert to a percentage.</span></span>
+<span id="cb494-2"><a href="interpretation.html#cb494-2"></a>print_imp2[, <span class="dv">2</span>] =<span class="st"> </span>print_imp2[, <span class="dv">2</span>] <span class="op">*</span><span class="st"> </span><span class="dv">100</span></span>
+<span id="cb494-3"><a href="interpretation.html#cb494-3"></a></span>
+<span id="cb494-4"><a href="interpretation.html#cb494-4"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: fix variable names and restrict to ~15 variables.</span></span>
+<span id="cb494-5"><a href="interpretation.html#cb494-5"></a></span>
+<span id="cb494-6"><a href="interpretation.html#cb494-6"></a></span>
+<span id="cb494-7"><a href="interpretation.html#cb494-7"></a></span>
+<span id="cb494-8"><a href="interpretation.html#cb494-8"></a><span class="co"># Manually escape variable names.</span></span>
+<span id="cb494-9"><a href="interpretation.html#cb494-9"></a>print_imp2<span class="op">$</span>Variable =<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;_&quot;</span>, <span class="st">&quot;</span><span class="ch">\\</span><span class="st">_&quot;</span>, print_imp2<span class="op">$</span>Variable, <span class="dt">fixed =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb494-10"><a href="interpretation.html#cb494-10"></a>print_imp2</span></code></pre></div>
+<pre><code>##              Variable  mean_dec_acc
+## 1         1. thal\\_2  3.4429779088
+## 2         2. thal\\_3  2.7318796325
+## 3          3. oldpeak  2.7078957923
+## 4            4. exang  1.6205799641
+## 5          5. thalach  1.5743230136
+## 6           6. ca\\_1  1.3456775599
+## 7           7. cp\\_2  1.3066898914
+## 8          8. sex\\_1  1.2964385593
+## 9        9. slope\\_2  1.0779059934
+## 10         10. ca\\_2  0.7938320939
+## 11      11. slope\\_1  0.7608534071
+## 12            12. age  0.7582579788
+## 13         13. cp\\_1  0.5827836422
+## 14         14. ca\\_3  0.4018786023
+## 15       15. trestbps  0.3535717660
+## 16         16. cp\\_3  0.3075327860
+## 17      17. miss\\_cp  0.0480107702
+## 18        18. restecg  0.0360949501
+## 19           19. chol  0.0354308487
+## 20       20. thal\\_1  0.0069548539
+## 21 21. miss\\_thalach  0.0057434419
+## 22   22. miss\\_exang  0.0000000000
+## 23            23. fbs -0.0002573076
+## 24     24. miss\\_fbs -0.0013830689
+## 25     25. miss\\_sex -0.0021819198
+## 26 26. miss\\_oldpeak -0.0046078973
+## 27         27. ca\\_4 -0.0095161808
+## 28      28. miss\\_ca -0.0115360833
+## 29 29. miss\\_restecg -0.0130471721
+## 30     30. miss\\_age -0.0142257555
+## 31   31. miss\\_slope -0.0147979304
+## 32    32. miss\\_chol -0.0158619663
+## 33    33. miss\\_thal -0.0275050647</code></pre>
+<div class="sourceCode" id="cb496"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb496-1"><a href="interpretation.html#cb496-1"></a><span class="kw">colnames</span>(print_imp2)[<span class="dv">1</span>] =<span class="st"> &quot;</span><span class="ch">\\</span><span class="st">thead{Variable}&quot;</span></span>
+<span id="cb496-2"><a href="interpretation.html#cb496-2"></a><span class="kw">colnames</span>(print_imp2)[<span class="dv">2</span>] =<span class="st"> &quot;</span><span class="ch">\\</span><span class="st">thead{Mean</span><span class="ch">\\\\</span><span class="st">{}Decrease</span><span class="ch">\\\\</span><span class="st">{}Accuracy (</span><span class="ch">\\</span><span class="st">%)}&quot;</span></span>
+<span id="cb496-3"><a href="interpretation.html#cb496-3"></a></span>
+<span id="cb496-4"><a href="interpretation.html#cb496-4"></a></span>
+<span id="cb496-5"><a href="interpretation.html#cb496-5"></a><span class="co"># Top 20.</span></span>
+<span id="cb496-6"><a href="interpretation.html#cb496-6"></a>(<span class="dt">kab_table =</span></span>
+<span id="cb496-7"><a href="interpretation.html#cb496-7"></a>    <span class="kw">kable</span>(print_imp2[<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>, ],</span>
+<span id="cb496-8"><a href="interpretation.html#cb496-8"></a>          <span class="dt">format =</span> <span class="st">&quot;latex&quot;</span>,</span>
+<span id="cb496-9"><a href="interpretation.html#cb496-9"></a>          <span class="dt">digits =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">3</span>),</span>
+<span id="cb496-10"><a href="interpretation.html#cb496-10"></a>          <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb496-11"><a href="interpretation.html#cb496-11"></a>          <span class="dt">escape =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb496-12"><a href="interpretation.html#cb496-12"></a>          <span class="dt">row.names =</span> <span class="ot">FALSE</span>))</span></code></pre></div>
+
+<div class="sourceCode" id="cb497"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb497-1"><a href="interpretation.html#cb497-1"></a><span class="kw">cat</span>(kab_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable_styling</span>(<span class="dt">latex_options =</span> <span class="st">&quot;striped&quot;</span>),</span>
+<span id="cb497-2"><a href="interpretation.html#cb497-2"></a>    <span class="dt">file =</span> <span class="st">&quot;tables/vim-rf-top20.tex&quot;</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="accumulated-local-effect-plots" class="section level2">
+<h2><span class="header-section-number">8.2</span> Accumulated local effect plots</h2>
+<div class="sourceCode" id="cb498"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb498-1"><a href="interpretation.html#cb498-1"></a>task =<span class="st"> </span><span class="kw">makeClassifTask</span>(<span class="dt">data =</span> data[, <span class="kw">c</span>(vars<span class="op">$</span>predictors, vars<span class="op">$</span>outcomes[<span class="dv">1</span>])],</span>
+<span id="cb498-2"><a href="interpretation.html#cb498-2"></a>                       <span class="dt">target =</span> vars<span class="op">$</span>outcomes[<span class="dv">1</span>])</span>
+<span id="cb498-3"><a href="interpretation.html#cb498-3"></a> </span>
+<span id="cb498-4"><a href="interpretation.html#cb498-4"></a>learner =<span class="st"> </span><span class="kw">makeLearner</span>(<span class="st">&quot;classif.ranger&quot;</span>,</span>
+<span id="cb498-5"><a href="interpretation.html#cb498-5"></a>                      <span class="dt">predict.type =</span> <span class="st">&quot;prob&quot;</span>,</span>
+<span id="cb498-6"><a href="interpretation.html#cb498-6"></a>                      <span class="co"># </span><span class="al">TODO</span><span class="co">: confirm best mtry.</span></span>
+<span id="cb498-7"><a href="interpretation.html#cb498-7"></a>                      <span class="dt">mtry =</span> <span class="dv">4</span>,</span>
+<span id="cb498-8"><a href="interpretation.html#cb498-8"></a>                      <span class="dt">num.trees =</span> 200L,</span>
+<span id="cb498-9"><a href="interpretation.html#cb498-9"></a>                      <span class="dt">num.threads =</span> <span class="kw">get_cores</span>())</span>
+<span id="cb498-10"><a href="interpretation.html#cb498-10"></a></span>
+<span id="cb498-11"><a href="interpretation.html#cb498-11"></a><span class="co"># This takes 1 second</span></span>
+<span id="cb498-12"><a href="interpretation.html#cb498-12"></a><span class="kw">system.time</span>({</span>
+<span id="cb498-13"><a href="interpretation.html#cb498-13"></a>  mod.mlr =<span class="st"> </span>mlr<span class="op">::</span><span class="kw">train</span>(learner, task)</span>
+<span id="cb498-14"><a href="interpretation.html#cb498-14"></a>})</span></code></pre></div>
+<pre><code>##    user  system elapsed 
+##    0.05    0.00    0.02</code></pre>
+<div class="sourceCode" id="cb500"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb500-1"><a href="interpretation.html#cb500-1"></a>mod.mlr<span class="op">$</span>learner.model</span></code></pre></div>
+<pre><code>## Ranger result
+## 
+## Call:
+##  ranger::ranger(formula = NULL, dependent.variable.name = tn,      data = getTaskData(.task, .subset), probability = (.learner$predict.type ==          &quot;prob&quot;), case.weights = .weights, ...) 
+## 
+## Type:                             Probability estimation 
+## Number of trees:                  200 
+## Sample size:                      303 
+## Number of independent variables:  33 
+## Mtry:                             4 
+## Target node size:                 10 
+## Variable importance mode:         none 
+## Splitrule:                        gini 
+## OOB prediction error (Brier s.):  0.1339879</code></pre>
+<div class="sourceCode" id="cb502"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb502-1"><a href="interpretation.html#cb502-1"></a>mod2 =<span class="st"> </span>Predictor<span class="op">$</span><span class="kw">new</span>(mod.mlr, <span class="dt">data =</span> data[, <span class="op">!</span><span class="kw">names</span>(data) <span class="op">%in%</span><span class="st"> </span>vars<span class="op">$</span>outcomes[<span class="dv">1</span>]],</span>
+<span id="cb502-2"><a href="interpretation.html#cb502-2"></a>                    <span class="dt">y =</span> data[[vars<span class="op">$</span>outcomes[<span class="dv">1</span>]]])</span>
+<span id="cb502-3"><a href="interpretation.html#cb502-3"></a></span>
+<span id="cb502-4"><a href="interpretation.html#cb502-4"></a></span>
+<span id="cb502-5"><a href="interpretation.html#cb502-5"></a></span>
+<span id="cb502-6"><a href="interpretation.html#cb502-6"></a><span class="co"># Default plot</span></span>
+<span id="cb502-7"><a href="interpretation.html#cb502-7"></a><span class="co">#effect$plot()</span></span>
+<span id="cb502-8"><a href="interpretation.html#cb502-8"></a></span>
+<span id="cb502-9"><a href="interpretation.html#cb502-9"></a><span class="co"># Calculate multiple ALE effects at a time.</span></span>
+<span id="cb502-10"><a href="interpretation.html#cb502-10"></a><span class="kw">system.time</span>({</span>
+<span id="cb502-11"><a href="interpretation.html#cb502-11"></a>  effect2 =<span class="st"> </span>iml<span class="op">::</span>FeatureEffects<span class="op">$</span><span class="kw">new</span>(mod2,</span>
+<span id="cb502-12"><a href="interpretation.html#cb502-12"></a>                               <span class="dt">grid.size =</span> 20L,</span>
+<span id="cb502-13"><a href="interpretation.html#cb502-13"></a>                               <span class="dt">features =</span> <span class="kw">c</span>(<span class="st">&quot;oldpeak&quot;</span>, <span class="st">&quot;trestbps&quot;</span>))</span>
+<span id="cb502-14"><a href="interpretation.html#cb502-14"></a>})</span></code></pre></div>
+<pre><code>## Warning: package &#39;ellipsis&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;lubridate&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;xml2&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;pROC&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;Metrics&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;backports&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;glue&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;reshape2&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;parallelMap&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;vctrs&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;openxlsx&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;lifecycle&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;foreach&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;lava&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;rlang&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;ROCR&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;prediction&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;recipes&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;tidyselect&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;plyr&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;bookdown&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;pillar&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;haven&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;withr&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;RCurl&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;future.apply&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;forcats&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;ModelMetrics&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 3.6.3</code></pre>
+<pre><code>##    user  system elapsed 
+##    1.12    0.20    1.26</code></pre>
+<div class="sourceCode" id="cb535"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb535-1"><a href="interpretation.html#cb535-1"></a><span class="co"># Default plot.</span></span>
+<span id="cb535-2"><a href="interpretation.html#cb535-2"></a>effect2<span class="op">$</span>effects[[<span class="st">&quot;oldpeak&quot;</span>]]<span class="op">$</span><span class="kw">plot</span>()</span></code></pre></div>
+<p><img src="data-science-in-r_files/figure-html/ale_plot-1.png" width="672" /></p>
+<div class="sourceCode" id="cb536"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb536-1"><a href="interpretation.html#cb536-1"></a><span class="co"># Improved plot</span></span>
+<span id="cb536-2"><a href="interpretation.html#cb536-2"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: move into ck37r</span></span>
+<span id="cb536-3"><a href="interpretation.html#cb536-3"></a>plot_ale =<span class="st"> </span><span class="cf">function</span>(var, var_display) {</span>
+<span id="cb536-4"><a href="interpretation.html#cb536-4"></a></span>
+<span id="cb536-5"><a href="interpretation.html#cb536-5"></a>  </span>
+<span id="cb536-6"><a href="interpretation.html#cb536-6"></a>  <span class="cf">if</span> (<span class="ot">FALSE</span>) {</span>
+<span id="cb536-7"><a href="interpretation.html#cb536-7"></a>  effect =<span class="st"> </span>iml<span class="op">::</span>FeatureEffect<span class="op">$</span><span class="kw">new</span>(mod2,</span>
+<span id="cb536-8"><a href="interpretation.html#cb536-8"></a>                                  <span class="dt">grid.size =</span> 32L,</span>
+<span id="cb536-9"><a href="interpretation.html#cb536-9"></a>                                  <span class="dt">feature =</span> var)</span>
+<span id="cb536-10"><a href="interpretation.html#cb536-10"></a>  </span>
+<span id="cb536-11"><a href="interpretation.html#cb536-11"></a>  old_results =<span class="st"> </span>effect<span class="op">$</span>results</span>
+<span id="cb536-12"><a href="interpretation.html#cb536-12"></a>  </span>
+<span id="cb536-13"><a href="interpretation.html#cb536-13"></a>  effect<span class="op">$</span>results  =<span class="st"> </span>old_results[old_results<span class="op">$</span>.class <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, ]</span>
+<span id="cb536-14"><a href="interpretation.html#cb536-14"></a>  }</span>
+<span id="cb536-15"><a href="interpretation.html#cb536-15"></a>  </span>
+<span id="cb536-16"><a href="interpretation.html#cb536-16"></a>  old_results =<span class="st"> </span>effect2<span class="op">$</span>effects[[var]]<span class="op">$</span>results</span>
+<span id="cb536-17"><a href="interpretation.html#cb536-17"></a>  effect2<span class="op">$</span>effects[[var]]<span class="op">$</span>results  =<span class="st"> </span>old_results[old_results<span class="op">$</span>.class <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, ]</span>
+<span id="cb536-18"><a href="interpretation.html#cb536-18"></a>  </span>
+<span id="cb536-19"><a href="interpretation.html#cb536-19"></a>  (<span class="dt">p =</span> effect2<span class="op">$</span>effects[[var]]<span class="op">$</span><span class="kw">plot</span>(<span class="dt">rug =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb536-20"><a href="interpretation.html#cb536-20"></a><span class="st">    </span><span class="kw">theme_minimal</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">strip.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></span>
+<span id="cb536-21"><a href="interpretation.html#cb536-21"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> var_display))</span>
+<span id="cb536-22"><a href="interpretation.html#cb536-22"></a>  </span>
+<span id="cb536-23"><a href="interpretation.html#cb536-23"></a>  <span class="co"># Density plot</span></span>
+<span id="cb536-24"><a href="interpretation.html#cb536-24"></a>  (<span class="dt">p2 =</span> <span class="kw">ggplot</span>(<span class="dt">data =</span> data, <span class="kw">aes_string</span>(<span class="dt">x =</span> var)) <span class="op">+</span></span>
+<span id="cb536-25"><a href="interpretation.html#cb536-25"></a><span class="st">    </span><span class="kw">geom_density</span>(<span class="dt">fill =</span> <span class="st">&quot;gray70&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;gray40&quot;</span>) <span class="op">+</span></span>
+<span id="cb536-26"><a href="interpretation.html#cb536-26"></a><span class="st">    </span><span class="kw">theme_minimal</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Sample</span><span class="ch">\n</span><span class="st">Density&quot;</span>) <span class="op">+</span></span>
+<span id="cb536-27"><a href="interpretation.html#cb536-27"></a><span class="st">    </span><span class="co">#scale_x_log10(breaks = breaks, limits = limits) +</span></span>
+<span id="cb536-28"><a href="interpretation.html#cb536-28"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.title.x =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb536-29"><a href="interpretation.html#cb536-29"></a>          <span class="dt">axis.title.y =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">8</span>),</span>
+<span id="cb536-30"><a href="interpretation.html#cb536-30"></a>          <span class="co"># Include x-axis major gridlines to ensure that plots are aligned.</span></span>
+<span id="cb536-31"><a href="interpretation.html#cb536-31"></a>          <span class="dt">panel.grid.major.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb536-32"><a href="interpretation.html#cb536-32"></a>          <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb536-33"><a href="interpretation.html#cb536-33"></a>          <span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb536-34"><a href="interpretation.html#cb536-34"></a>          <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>()))</span>
+<span id="cb536-35"><a href="interpretation.html#cb536-35"></a>  </span>
+<span id="cb536-36"><a href="interpretation.html#cb536-36"></a>  <span class="kw">print</span>(cowplot<span class="op">::</span><span class="kw">plot_grid</span>(p, p2, <span class="dt">align =</span> <span class="st">&quot;v&quot;</span>, <span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">rel_heights =</span> <span class="kw">c</span>(<span class="fl">0.9</span>, <span class="fl">0.1</span>)))</span>
+<span id="cb536-37"><a href="interpretation.html#cb536-37"></a>  </span>
+<span id="cb536-38"><a href="interpretation.html#cb536-38"></a>  <span class="kw">ggsave</span>(<span class="kw">paste0</span>(<span class="st">&quot;visuals/ale-&quot;</span>, var, <span class="st">&quot;.pdf&quot;</span>), <span class="dt">width =</span> <span class="dv">4</span>, <span class="dt">height =</span> <span class="dv">4</span>)</span>
+<span id="cb536-39"><a href="interpretation.html#cb536-39"></a>}</span>
+<span id="cb536-40"><a href="interpretation.html#cb536-40"></a></span>
+<span id="cb536-41"><a href="interpretation.html#cb536-41"></a></span>
+<span id="cb536-42"><a href="interpretation.html#cb536-42"></a><span class="kw">plot_ale</span>(<span class="st">&quot;oldpeak&quot;</span>, <span class="st">&quot;Old peak&quot;</span>)</span></code></pre></div>
+<p><img src="data-science-in-r_files/figure-html/ale_plot-2.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="calibration.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

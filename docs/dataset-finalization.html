@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Dataset finalization | Data science in R</title>
+  <meta name="description" content="An applied tutorial" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Dataset finalization | Data science in R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="An applied tutorial" />
+  <meta name="github-repo" content="ck37/Data-Science-R" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Dataset finalization | Data science in R" />
+  
+  <meta name="twitter:description" content="An applied tutorial" />
+  
+
+
+
+<meta name="date" content="2020-06-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="missing-values-and-imputation.html"/>
+<link rel="next" href="exploratory-data-analysis.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#rmarkdown-files"><i class="fa fa-check"></i><b>1.1</b> RMarkdown files</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#directory-structure"><i class="fa fa-check"></i><b>1.2</b> Directory structure</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="initial-data-import.html"><a href="initial-data-import.html"><i class="fa fa-check"></i><b>2</b> Initial data import</a><ul>
+<li class="chapter" data-level="2.1" data-path="initial-data-import.html"><a href="initial-data-import.html#import-raw-data"><i class="fa fa-check"></i><b>2.1</b> Import raw data</a></li>
+<li class="chapter" data-level="2.2" data-path="initial-data-import.html"><a href="initial-data-import.html#merge-data"><i class="fa fa-check"></i><b>2.2</b> Merge data</a></li>
+<li class="chapter" data-level="2.3" data-path="initial-data-import.html"><a href="initial-data-import.html#recoding"><i class="fa fa-check"></i><b>2.3</b> Recoding</a></li>
+<li class="chapter" data-level="2.4" data-path="initial-data-import.html"><a href="initial-data-import.html#exclusions"><i class="fa fa-check"></i><b>2.4</b> Exclusions</a></li>
+<li class="chapter" data-level="2.5" data-path="initial-data-import.html"><a href="initial-data-import.html#categoricals-to-factors"><i class="fa fa-check"></i><b>2.5</b> Categoricals to factors</a></li>
+<li class="chapter" data-level="2.6" data-path="initial-data-import.html"><a href="initial-data-import.html#data-structure"><i class="fa fa-check"></i><b>2.6</b> Data structure</a></li>
+<li class="chapter" data-level="2.7" data-path="initial-data-import.html"><a href="initial-data-import.html#extreme-value-review"><i class="fa fa-check"></i><b>2.7</b> Extreme value review</a></li>
+<li class="chapter" data-level="2.8" data-path="initial-data-import.html"><a href="initial-data-import.html#remove-constant-predictors"><i class="fa fa-check"></i><b>2.8</b> Remove constant predictors</a></li>
+<li class="chapter" data-level="2.9" data-path="initial-data-import.html"><a href="initial-data-import.html#tutorial-only-add-random-missingness"><i class="fa fa-check"></i><b>2.9</b> Tutorial-only: add random missingness</a></li>
+<li class="chapter" data-level="2.10" data-path="initial-data-import.html"><a href="initial-data-import.html#summarize-predictors"><i class="fa fa-check"></i><b>2.10</b> Summarize predictors</a></li>
+<li class="chapter" data-level="" data-path="initial-data-import.html"><a href="initial-data-import.html#save-unimputed-dataset"><i class="fa fa-check"></i>Save unimputed dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html"><i class="fa fa-check"></i><b>3</b> Missing values and imputation</a><ul>
+<li class="chapter" data-level="3.1" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#load-data"><i class="fa fa-check"></i><b>3.1</b> Load data</a></li>
+<li class="chapter" data-level="3.2" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#examine-predictor-missingness"><i class="fa fa-check"></i><b>3.2</b> Examine predictor missingness</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#missingness-table"><i class="fa fa-check"></i><b>3.2.1</b> Missingness table</a></li>
+<li class="chapter" data-level="3.2.2" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#missingness-heatmap"><i class="fa fa-check"></i><b>3.2.2</b> Missingness heatmap</a></li>
+<li class="chapter" data-level="3.2.3" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#missingness-count-plot"><i class="fa fa-check"></i><b>3.2.3</b> Missingness count plot</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#examine-outcome-missingness"><i class="fa fa-check"></i><b>3.3</b> Examine outcome missingness</a></li>
+<li class="chapter" data-level="3.4" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#impute-missing-predictor-values"><i class="fa fa-check"></i><b>3.4</b> Impute missing predictor values</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#missingness-indicators"><i class="fa fa-check"></i><b>3.4.1</b> Missingness indicators</a></li>
+<li class="chapter" data-level="3.4.2" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#impute-to-0"><i class="fa fa-check"></i><b>3.4.2</b> Impute to 0</a></li>
+<li class="chapter" data-level="3.4.3" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#glrm-prep"><i class="fa fa-check"></i><b>3.4.3</b> GLRM prep</a></li>
+<li class="chapter" data-level="3.4.4" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#start-h2o"><i class="fa fa-check"></i><b>3.4.4</b> Start h2o</a></li>
+<li class="chapter" data-level="3.4.5" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#load-data-into-h2o"><i class="fa fa-check"></i><b>3.4.5</b> Load data into h2o</a></li>
+<li class="chapter" data-level="3.4.6" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#glrm-traintest-split"><i class="fa fa-check"></i><b>3.4.6</b> GLRM train/test split</a></li>
+<li class="chapter" data-level="3.4.7" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#define-glrm-grid"><i class="fa fa-check"></i><b>3.4.7</b> Define GLRM grid</a></li>
+<li class="chapter" data-level="3.4.8" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#glrm-grid-search"><i class="fa fa-check"></i><b>3.4.8</b> GLRM grid search</a></li>
+<li class="chapter" data-level="3.4.9" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#apply-best-glrm"><i class="fa fa-check"></i><b>3.4.9</b> Apply best GLRM</a></li>
+<li class="chapter" data-level="3.4.10" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#review-glrm"><i class="fa fa-check"></i><b>3.4.10</b> Review GLRM</a></li>
+<li class="chapter" data-level="3.4.11" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#evaluate-imputation"><i class="fa fa-check"></i><b>3.4.11</b> Evaluate imputation</a></li>
+<li class="chapter" data-level="3.4.12" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#replace-missing-values."><i class="fa fa-check"></i><b>3.4.12</b> Replace missing values.</a></li>
+<li class="chapter" data-level="3.4.13" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#shutdown-h2o"><i class="fa fa-check"></i><b>3.4.13</b> Shutdown h2o</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#update-predictor-summary"><i class="fa fa-check"></i><b>3.5</b> Update predictor summary</a></li>
+<li class="chapter" data-level="3.6" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#histogram-condense"><i class="fa fa-check"></i><b>3.6</b> Histogram condense</a></li>
+<li class="chapter" data-level="3.7" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#update-predictor-summary-1"><i class="fa fa-check"></i><b>3.7</b> Update predictor summary</a></li>
+<li class="chapter" data-level="" data-path="missing-values-and-imputation.html"><a href="missing-values-and-imputation.html#save-imputed-dataset"><i class="fa fa-check"></i>Save imputed dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="dataset-finalization.html"><a href="dataset-finalization.html"><i class="fa fa-check"></i><b>4</b> Dataset finalization</a><ul>
+<li class="chapter" data-level="" data-path="dataset-finalization.html"><a href="dataset-finalization.html#load-data-1"><i class="fa fa-check"></i>Load data</a></li>
+<li class="chapter" data-level="4.1" data-path="dataset-finalization.html"><a href="dataset-finalization.html#factors-to-indicators"><i class="fa fa-check"></i><b>4.1</b> Factors to indicators</a></li>
+<li class="chapter" data-level="4.2" data-path="dataset-finalization.html"><a href="dataset-finalization.html#remove-collinear-predictors"><i class="fa fa-check"></i><b>4.2</b> Remove collinear predictors</a></li>
+<li class="chapter" data-level="4.3" data-path="dataset-finalization.html"><a href="dataset-finalization.html#confirm-predictor-matrix-invertability"><i class="fa fa-check"></i><b>4.3</b> Confirm predictor matrix invertability</a></li>
+<li class="chapter" data-level="" data-path="dataset-finalization.html"><a href="dataset-finalization.html#save-finalized-dataset"><i class="fa fa-check"></i>Save finalized dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory data analysis</a><ul>
+<li class="chapter" data-level="" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#load-data-2"><i class="fa fa-check"></i>Load data</a></li>
+<li class="chapter" data-level="" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#tbd"><i class="fa fa-check"></i>TBD</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="modeling.html"><a href="modeling.html"><i class="fa fa-check"></i><b>6</b> Modeling</a><ul>
+<li class="chapter" data-level="" data-path="modeling.html"><a href="modeling.html#load-data-3"><i class="fa fa-check"></i>Load data</a></li>
+<li class="chapter" data-level="6.1" data-path="modeling.html"><a href="modeling.html#random-forest"><i class="fa fa-check"></i><b>6.1</b> Random forest</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="modeling.html"><a href="modeling.html#rf-convergence-plot"><i class="fa fa-check"></i><b>6.1.1</b> RF convergence plot</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="modeling.html"><a href="modeling.html#ensemble"><i class="fa fa-check"></i><b>6.2</b> Ensemble</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="modeling.html"><a href="modeling.html#prep-sl-library"><i class="fa fa-check"></i><b>6.2.1</b> Prep SL library</a></li>
+<li class="chapter" data-level="6.2.2" data-path="modeling.html"><a href="modeling.html#estimate-superlearner"><i class="fa fa-check"></i><b>6.2.2</b> Estimate SuperLearner</a></li>
+<li class="chapter" data-level="6.2.3" data-path="modeling.html"><a href="modeling.html#review-sl-results"><i class="fa fa-check"></i><b>6.2.3</b> Review SL results</a></li>
+<li class="chapter" data-level="6.2.4" data-path="modeling.html"><a href="modeling.html#sl-pr-auc"><i class="fa fa-check"></i><b>6.2.4</b> SL PR-AUC</a></li>
+<li class="chapter" data-level="6.2.5" data-path="modeling.html"><a href="modeling.html#sl-plots"><i class="fa fa-check"></i><b>6.2.5</b> SL plots</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="modeling.html"><a href="modeling.html#nested-ensemble"><i class="fa fa-check"></i><b>6.3</b> Nested ensemble</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="modeling.html"><a href="modeling.html#ensemble-weights"><i class="fa fa-check"></i><b>6.3.1</b> Ensemble weights</a></li>
+<li class="chapter" data-level="6.3.2" data-path="modeling.html"><a href="modeling.html#auc-analysis"><i class="fa fa-check"></i><b>6.3.2</b> AUC analysis</a></li>
+<li class="chapter" data-level="6.3.3" data-path="modeling.html"><a href="modeling.html#precision-recall-analysis"><i class="fa fa-check"></i><b>6.3.3</b> Precision-Recall analysis</a></li>
+<li class="chapter" data-level="6.3.4" data-path="modeling.html"><a href="modeling.html#brier-score"><i class="fa fa-check"></i><b>6.3.4</b> Brier score</a></li>
+<li class="chapter" data-level="6.3.5" data-path="modeling.html"><a href="modeling.html#index-of-prediction-accuracy"><i class="fa fa-check"></i><b>6.3.5</b> Index of prediction accuracy</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="calibration.html"><a href="calibration.html"><i class="fa fa-check"></i><b>7</b> Calibration</a><ul>
+<li class="chapter" data-level="" data-path="calibration.html"><a href="calibration.html#tbd-1"><i class="fa fa-check"></i>TBD</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="interpretation.html"><a href="interpretation.html"><i class="fa fa-check"></i><b>8</b> Interpretation</a><ul>
+<li class="chapter" data-level="" data-path="interpretation.html"><a href="interpretation.html#load-data-4"><i class="fa fa-check"></i>Load data</a></li>
+<li class="chapter" data-level="8.1" data-path="interpretation.html"><a href="interpretation.html#variable-importance"><i class="fa fa-check"></i><b>8.1</b> Variable importance</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="interpretation.html"><a href="interpretation.html#random-forest-1"><i class="fa fa-check"></i><b>8.1.1</b> Random forest</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="interpretation.html"><a href="interpretation.html#accumulated-local-effect-plots"><i class="fa fa-check"></i><b>8.2</b> Accumulated local effect plots</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data science in R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="dataset-finalization" class="section level1">
+<h1><span class="header-section-number">Chapter 4</span> Dataset finalization</h1>
+<div id="load-data-1" class="section level2 unnumbered">
+<h2>Load data</h2>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="dataset-finalization.html#cb240-1"></a><span class="co"># Created in 2-clean-impute.Rmd</span></span>
+<span id="cb240-2"><a href="dataset-finalization.html#cb240-2"></a><span class="co"># Objects included: data, vars</span></span>
+<span id="cb240-3"><a href="dataset-finalization.html#cb240-3"></a><span class="co"># renv also includes a load() method, so we specify base:: here.</span></span>
+<span id="cb240-4"><a href="dataset-finalization.html#cb240-4"></a>base<span class="op">::</span><span class="kw">load</span>(<span class="st">&quot;data/clean-impute.RData&quot;</span>)</span></code></pre></div>
+</div>
+<div id="factors-to-indicators" class="section level2">
+<h2><span class="header-section-number">4.1</span> Factors to indicators</h2>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="dataset-finalization.html#cb241-1"></a>result =<span class="st"> </span>ck37r<span class="op">::</span><span class="kw">factors_to_indicators</span>(data[vars<span class="op">$</span>predictors], <span class="dt">verbose =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## Converting factors (5): sex, cp, slope, ca, thal
+## Converting sex from a factor to a matrix (2 levels).
+## : sex_1 
+## Converting cp from a factor to a matrix (4 levels).
+## : cp_1 cp_2 cp_3 
+## Converting slope from a factor to a matrix (3 levels).
+## : slope_1 slope_2 
+## Converting ca from a factor to a matrix (5 levels).
+## : ca_1 ca_2 ca_3 ca_4 
+## Converting thal from a factor to a matrix (4 levels).
+## : thal_1 thal_2 thal_3 
+## Combining factor matrices into a data frame.</code></pre>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="dataset-finalization.html#cb243-1"></a><span class="kw">names</span>(result)</span></code></pre></div>
+<pre><code>## [1] &quot;data&quot;         &quot;predictors&quot;   &quot;factor_vars&quot;  &quot;factor_names&quot;</code></pre>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="dataset-finalization.html#cb245-1"></a><span class="co"># Temporarily remove all predictors from the dataframe.</span></span>
+<span id="cb245-2"><a href="dataset-finalization.html#cb245-2"></a>data[vars<span class="op">$</span>predictors] =<span class="st"> </span><span class="ot">NULL</span></span>
+<span id="cb245-3"><a href="dataset-finalization.html#cb245-3"></a></span>
+<span id="cb245-4"><a href="dataset-finalization.html#cb245-4"></a><span class="co"># Now add the new data back on.</span></span>
+<span id="cb245-5"><a href="dataset-finalization.html#cb245-5"></a>data =<span class="st"> </span><span class="kw">cbind</span>(data, result<span class="op">$</span>data)</span>
+<span id="cb245-6"><a href="dataset-finalization.html#cb245-6"></a></span>
+<span id="cb245-7"><a href="dataset-finalization.html#cb245-7"></a><span class="co"># Remove the original factor predictors from the list of used predictors, add</span></span>
+<span id="cb245-8"><a href="dataset-finalization.html#cb245-8"></a><span class="co"># add the new indicator predictors.</span></span>
+<span id="cb245-9"><a href="dataset-finalization.html#cb245-9"></a>(vars<span class="op">$</span><span class="dt">predictors =</span> <span class="kw">c</span>(<span class="kw">setdiff</span>(vars<span class="op">$</span>predictors, result<span class="op">$</span>factor_vars), <span class="kw">unlist</span>(result<span class="op">$</span>factor_names)))</span></code></pre></div>
+<pre><code>##  [1] &quot;age&quot;          &quot;trestbps&quot;     &quot;chol&quot;         &quot;fbs&quot;          &quot;restecg&quot;     
+##  [6] &quot;thalach&quot;      &quot;exang&quot;        &quot;oldpeak&quot;      &quot;miss_age&quot;     &quot;miss_sex&quot;    
+## [11] &quot;miss_cp&quot;      &quot;miss_chol&quot;    &quot;miss_fbs&quot;     &quot;miss_restecg&quot; &quot;miss_thalach&quot;
+## [16] &quot;miss_exang&quot;   &quot;miss_oldpeak&quot; &quot;miss_slope&quot;   &quot;miss_ca&quot;      &quot;miss_thal&quot;   
+## [21] &quot;sex_1&quot;        &quot;cp_1&quot;         &quot;cp_2&quot;         &quot;cp_3&quot;         &quot;slope_1&quot;     
+## [26] &quot;slope_2&quot;      &quot;ca_1&quot;         &quot;ca_2&quot;         &quot;ca_3&quot;         &quot;ca_4&quot;        
+## [31] &quot;thal_1&quot;       &quot;thal_2&quot;       &quot;thal_3&quot;</code></pre>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="dataset-finalization.html#cb247-1"></a><span class="co"># Confirm that our predictor vector is updated correctly.</span></span>
+<span id="cb247-2"><a href="dataset-finalization.html#cb247-2"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">all</span>(vars<span class="op">$</span>predictors <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(data))) {</span>
+<span id="cb247-3"><a href="dataset-finalization.html#cb247-3"></a>  missing_vars =<span class="st"> </span><span class="kw">setdiff</span>(vars<span class="op">$</span>predictors, <span class="kw">names</span>(data))</span>
+<span id="cb247-4"><a href="dataset-finalization.html#cb247-4"></a>  <span class="kw">stop</span>(<span class="st">&quot;Missing new indicators that were added: &quot;</span>, <span class="kw">paste</span>(missing_vars, <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>))</span>
+<span id="cb247-5"><a href="dataset-finalization.html#cb247-5"></a>}</span>
+<span id="cb247-6"><a href="dataset-finalization.html#cb247-6"></a>  </span>
+<span id="cb247-7"><a href="dataset-finalization.html#cb247-7"></a></span>
+<span id="cb247-8"><a href="dataset-finalization.html#cb247-8"></a><span class="kw">rm</span>(result)</span></code></pre></div>
+</div>
+<div id="remove-collinear-predictors" class="section level2">
+<h2><span class="header-section-number">4.2</span> Remove collinear predictors</h2>
+<p>This is not essential, but nice for the linear regression estimators.</p>
+<p>This needs to be after imputation, because it currently cannot handle missingness.</p>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="dataset-finalization.html#cb248-1"></a><span class="co"># Remove linearly correlated columns from the covariate file</span></span>
+<span id="cb248-2"><a href="dataset-finalization.html#cb248-2"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: assumes that there are no factor variables.</span></span>
+<span id="cb248-3"><a href="dataset-finalization.html#cb248-3"></a>linear_combos =<span class="st"> </span>caret<span class="op">::</span><span class="kw">findLinearCombos</span>(data[, vars<span class="op">$</span>predictors])</span>
+<span id="cb248-4"><a href="dataset-finalization.html#cb248-4"></a></span>
+<span id="cb248-5"><a href="dataset-finalization.html#cb248-5"></a><span class="cf">if</span> (<span class="kw">length</span>(linear_combos<span class="op">$</span>remove) <span class="op">&gt;</span><span class="st"> </span>0L) {</span>
+<span id="cb248-6"><a href="dataset-finalization.html#cb248-6"></a></span>
+<span id="cb248-7"><a href="dataset-finalization.html#cb248-7"></a>  <span class="cf">if</span> (conf<span class="op">$</span>verbose) {</span>
+<span id="cb248-8"><a href="dataset-finalization.html#cb248-8"></a>    <span class="kw">cat</span>(<span class="st">&quot;Removing&quot;</span>, <span class="kw">length</span>(linear_combos<span class="op">$</span>remove), <span class="st">&quot;predictors due to collinearity.</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb248-9"><a href="dataset-finalization.html#cb248-9"></a>    <span class="kw">cat</span>(<span class="st">&quot;Vars:&quot;</span>, <span class="kw">paste0</span>(vars<span class="op">$</span>predictors[linear_combos<span class="op">$</span>remove], <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb248-10"><a href="dataset-finalization.html#cb248-10"></a>  }</span>
+<span id="cb248-11"><a href="dataset-finalization.html#cb248-11"></a>  </span>
+<span id="cb248-12"><a href="dataset-finalization.html#cb248-12"></a>  <span class="co"># Make sure we don&#39;t switch to a vector if only 1 column remains.</span></span>
+<span id="cb248-13"><a href="dataset-finalization.html#cb248-13"></a>  data =<span class="st"> </span>data[, <span class="op">!</span><span class="kw">colnames</span>(data) <span class="op">%in%</span><span class="st"> </span>vars<span class="op">$</span>predictors[linear_combos<span class="op">$</span>remove],</span>
+<span id="cb248-14"><a href="dataset-finalization.html#cb248-14"></a>              drop =<span class="st"> </span><span class="ot">FALSE</span>]</span>
+<span id="cb248-15"><a href="dataset-finalization.html#cb248-15"></a>  </span>
+<span id="cb248-16"><a href="dataset-finalization.html#cb248-16"></a>  vars<span class="op">$</span>predictors =<span class="st"> </span><span class="kw">setdiff</span>(vars<span class="op">$</span>predictors, vars<span class="op">$</span>predictors[linear_combos<span class="op">$</span>remove])</span>
+<span id="cb248-17"><a href="dataset-finalization.html#cb248-17"></a>  </span>
+<span id="cb248-18"><a href="dataset-finalization.html#cb248-18"></a>  <span class="cf">if</span> (conf<span class="op">$</span>verbose) {</span>
+<span id="cb248-19"><a href="dataset-finalization.html#cb248-19"></a>    <span class="kw">cat</span>(<span class="st">&quot;Updated predictor count:&quot;</span>, <span class="kw">length</span>(vars<span class="op">$</span>predictors), <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb248-20"><a href="dataset-finalization.html#cb248-20"></a>  }</span>
+<span id="cb248-21"><a href="dataset-finalization.html#cb248-21"></a>} <span class="cf">else</span> {</span>
+<span id="cb248-22"><a href="dataset-finalization.html#cb248-22"></a>  <span class="kw">cat</span>(<span class="st">&quot;No linear duplication found.</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb248-23"><a href="dataset-finalization.html#cb248-23"></a>}</span></code></pre></div>
+<pre><code>## No linear duplication found.</code></pre>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="dataset-finalization.html#cb250-1"></a><span class="kw">rm</span>(linear_combos)</span></code></pre></div>
+</div>
+<div id="confirm-predictor-matrix-invertability" class="section level2">
+<h2><span class="header-section-number">4.3</span> Confirm predictor matrix invertability</h2>
+<p>This is not essential, but nice for the linear regression estimators.</p>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="dataset-finalization.html#cb251-1"></a><span class="co"># Compute covariance matrix.</span></span>
+<span id="cb251-2"><a href="dataset-finalization.html#cb251-2"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: this requires that no factors be included.</span></span>
+<span id="cb251-3"><a href="dataset-finalization.html#cb251-3"></a>cov_mat =<span class="st"> </span>stats<span class="op">::</span><span class="kw">cov</span>(data[vars<span class="op">$</span>predictors])</span>
+<span id="cb251-4"><a href="dataset-finalization.html#cb251-4"></a>  </span>
+<span id="cb251-5"><a href="dataset-finalization.html#cb251-5"></a><span class="co"># Compute QR decomposition of covariance matrix.</span></span>
+<span id="cb251-6"><a href="dataset-finalization.html#cb251-6"></a>qr_cov =<span class="st"> </span>base<span class="op">::</span><span class="kw">qr</span>(cov_mat)</span>
+<span id="cb251-7"><a href="dataset-finalization.html#cb251-7"></a></span>
+<span id="cb251-8"><a href="dataset-finalization.html#cb251-8"></a><span class="co"># These need to be equal for the covariance matrix to be full rank.</span></span>
+<span id="cb251-9"><a href="dataset-finalization.html#cb251-9"></a><span class="cf">if</span> (<span class="kw">ncol</span>(cov_mat) <span class="op">!=</span><span class="st"> </span>qr_cov<span class="op">$</span>rank) {</span>
+<span id="cb251-10"><a href="dataset-finalization.html#cb251-10"></a>  <span class="kw">cat</span>(<span class="st">&quot;Warning: matrix of predictors is not full rank.</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb251-11"><a href="dataset-finalization.html#cb251-11"></a>  <span class="kw">cat</span>(<span class="st">&quot;Predictor columns:&quot;</span>, <span class="kw">ncol</span>(cov_mat), <span class="st">&quot;QR rank:&quot;</span>, qr_cov<span class="op">$</span>rank, <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb251-12"><a href="dataset-finalization.html#cb251-12"></a>} <span class="cf">else</span> {</span>
+<span id="cb251-13"><a href="dataset-finalization.html#cb251-13"></a>  <span class="kw">cat</span>(<span class="st">&quot;Predictor matrix is full rank.</span><span class="ch">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb251-14"><a href="dataset-finalization.html#cb251-14"></a>}</span></code></pre></div>
+<pre><code>## Predictor matrix is full rank.</code></pre>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="dataset-finalization.html#cb253-1"></a><span class="kw">rm</span>(cov_mat, qr_cov)</span></code></pre></div>
+</div>
+<div id="save-finalized-dataset" class="section level2 unnumbered">
+<h2>Save finalized dataset</h2>
+<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="dataset-finalization.html#cb254-1"></a><span class="kw">save</span>(data, vars,</span>
+<span id="cb254-2"><a href="dataset-finalization.html#cb254-2"></a>     <span class="dt">file =</span> <span class="st">&quot;data/clean-finalize-imputed.RData&quot;</span>)</span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="missing-values-and-imputation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="exploratory-data-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

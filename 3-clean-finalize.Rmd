@@ -1,12 +1,13 @@
 ---
-title: "Clean data: finalize"
 output:
   html_document:
     toc: true
     toc_float: true
 ---
 
-```{r setup, include=FALSE}
+# Dataset finalization
+
+```{r setup_3, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 # This file provides the startup() function.
@@ -19,11 +20,9 @@ startup(auto_install = FALSE, verbose = FALSE)
 ck37r::load_all_code("R", verbose = TRUE)
 ```
 
-Previous file: 2-clean-impute.Rmd
+## Load data {-}
 
-## Load data
-
-```{r load_data}
+```{r load_data_3}
 # Created in 2-clean-impute.Rmd
 # Objects included: data, vars
 # renv also includes a load() method, so we specify base:: here.
@@ -113,11 +112,9 @@ if (ncol(cov_mat) != qr_cov$rank) {
 rm(cov_mat, qr_cov)
 ```
 
-## Save finalized dataset
+## Save finalized dataset {-}
 
 ```{r save_finalized}
 save(data, vars,
      file = "data/clean-finalize-imputed.RData")
 ```
-
-Next file: 4-eda.Rmd
