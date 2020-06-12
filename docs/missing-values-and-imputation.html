@@ -131,6 +131,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Overview</a><ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#rmarkdown-files"><i class="fa fa-check"></i><b>1.1</b> RMarkdown files</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#directory-structure"><i class="fa fa-check"></i><b>1.2</b> Directory structure</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#acknowledgments"><i class="fa fa-check"></i><b>1.3</b> Acknowledgments</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="initial-data-import.html"><a href="initial-data-import.html"><i class="fa fa-check"></i><b>2</b> Initial data import</a><ul>
 <li class="chapter" data-level="2.1" data-path="initial-data-import.html"><a href="initial-data-import.html#import-raw-data"><i class="fa fa-check"></i><b>2.1</b> Import raw data</a></li>
@@ -543,14 +544,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## H2O is not running yet, starting it now...
 ## 
 ## Note:  In case of errors look at the following log files:
-##     C:\Users\chris\AppData\Local\Temp\RtmpExyuf1\file416071cc7e5d/h2o_chris_started_from_r.out
-##     C:\Users\chris\AppData\Local\Temp\RtmpExyuf1\file4160712258fc/h2o_chris_started_from_r.err
+##     C:\Users\chris\AppData\Local\Temp\RtmpyaFxH9\file2c8c63dc2230/h2o_chris_started_from_r.out
+##     C:\Users\chris\AppData\Local\Temp\RtmpyaFxH9\file2c8c10d3703f/h2o_chris_started_from_r.err
 ## 
 ## 
 ## Starting H2O JVM and connecting:  Connection successful!
 ## 
 ## R is connected to the H2O cluster: 
-##     H2O cluster uptime:         3 seconds 300 milliseconds 
+##     H2O cluster uptime:         3 seconds 151 milliseconds 
 ##     H2O cluster timezone:       America/Los_Angeles 
 ##     H2O data parsing timezone:  UTC 
 ##     H2O cluster version:        3.30.0.1 
@@ -4243,7 +4244,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb165-18"><a href="missing-values-and-imputation.html#cb165-18"></a>           <span class="dt">loss_by_col =</span> losses<span class="op">$</span>loss)</span>
 <span id="cb165-19"><a href="missing-values-and-imputation.html#cb165-19"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##    0.12    0.01    2.37</code></pre>
+##    0.10    0.00    2.41</code></pre>
 <div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="missing-values-and-imputation.html#cb167-1"></a>h2o<span class="op">::</span><span class="kw">summary</span>(glrm_result)</span></code></pre></div>
 <pre><code>## Model Details:
 ## ==============
@@ -4266,20 +4267,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 
 ## Scoring History: 
 ##             timestamp   duration iterations step_size  objective
-## 1 2020-06-11 17:52:17  0.218 sec          0   1.05000 3144.82797
-## 2 2020-06-11 17:52:17  0.231 sec          1   0.70000 3144.82797
-## 3 2020-06-11 17:52:17  0.242 sec          2   0.46667 3144.82797
-## 4 2020-06-11 17:52:17  0.257 sec          3   0.31111 3144.82797
-## 5 2020-06-11 17:52:17  0.267 sec          4   0.32667 2931.70821
+## 1 2020-06-11 18:09:18  0.232 sec          0   1.05000 3144.82797
+## 2 2020-06-11 18:09:18  0.250 sec          1   0.70000 3144.82797
+## 3 2020-06-11 18:09:18  0.261 sec          2   0.46667 3144.82797
+## 4 2020-06-11 18:09:18  0.271 sec          3   0.31111 3144.82797
+## 5 2020-06-11 18:09:18  0.280 sec          4   0.32667 2931.70821
 ## 
 ## ---
 ##               timestamp   duration iterations step_size  objective
-## 232 2020-06-11 17:52:18  1.324 sec        231   0.00017 1045.37528
-## 233 2020-06-11 17:52:18  1.328 sec        232   0.00011 1045.37528
-## 234 2020-06-11 17:52:18  1.332 sec        233   0.00012 1045.34632
-## 235 2020-06-11 17:52:18  1.338 sec        234   0.00013 1045.33851
-## 236 2020-06-11 17:52:18  1.342 sec        235   0.00013 1045.33367
-## 237 2020-06-11 17:52:18  1.346 sec        236   0.00009 1045.33367</code></pre>
+## 232 2020-06-11 18:09:19  1.189 sec        231   0.00017 1045.37528
+## 233 2020-06-11 18:09:19  1.192 sec        232   0.00011 1045.37528
+## 234 2020-06-11 18:09:19  1.196 sec        233   0.00012 1045.34632
+## 235 2020-06-11 18:09:19  1.199 sec        234   0.00013 1045.33851
+## 236 2020-06-11 18:09:19  1.202 sec        235   0.00013 1045.33367
+## 237 2020-06-11 18:09:19  1.205 sec        236   0.00009 1045.33367</code></pre>
 <div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="missing-values-and-imputation.html#cb169-1"></a>glrm_result</span></code></pre></div>
 <pre><code>## Model Details:
 ## ==============
