@@ -2,3 +2,10 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# Ignore various generated files.
+data/*.RData
+tables/*.tex
+tables/*.xlsx
+visuals/*.pdf
+visuals/*.png
