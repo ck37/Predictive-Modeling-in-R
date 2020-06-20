@@ -51,6 +51,6 @@ Steyerberg, E. W. (2019). **Clinical prediction models**. Springer International
 
 If you find this tutorial useful please cite it as noted below:
 
-Kennedy, Chris J. (2020). "Tutorial on data science in R." GitHub repository.
-https://github.com/ck37/Data-Science-R
+Kennedy, Chris J. (2020). "Tutorial on predictive modeling in R." GitHub repository.
+https://github.com/ck37/Predictive-Modeling-in-R
 
