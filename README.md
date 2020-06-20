@@ -1,4 +1,4 @@
-# Short Course: Data Science in R 
+# Short Course: Predictive Modeling in R 
 
 Data science and machine learning tutorial using heart disease as an application. Work in progress.
 
