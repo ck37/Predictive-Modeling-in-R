@@ -4,26 +4,26 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 8 Interpretation | Data science in R</title>
+  <title>Chapter 8 Interpretation | Predictive modeling in R</title>
   <meta name="description" content="An applied tutorial" />
   <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 8 Interpretation | Data science in R" />
+  <meta property="og:title" content="Chapter 8 Interpretation | Predictive modeling in R" />
   <meta property="og:type" content="book" />
   
   
   <meta property="og:description" content="An applied tutorial" />
-  <meta name="github-repo" content="ck37/Data-Science-R" />
+  <meta name="github-repo" content="ck37/Predicive-Modeling-in-R" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 8 Interpretation | Data science in R" />
+  <meta name="twitter:title" content="Chapter 8 Interpretation | Predictive modeling in R" />
   
   <meta name="twitter:description" content="An applied tutorial" />
   
 
 
 
-<meta name="date" content="2020-06-11" />
+<meta name="date" content="2020-06-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -224,7 +224,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data science in R</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Predictive modeling in R</a>
           </h1>
         </div>
 
@@ -459,7 +459,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb498-13"><a href="interpretation.html#cb498-13"></a>  mod.mlr =<span class="st"> </span>mlr<span class="op">::</span><span class="kw">train</span>(learner, task)</span>
 <span id="cb498-14"><a href="interpretation.html#cb498-14"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##    0.06    0.02    0.03</code></pre>
+##    0.03    0.01    0.03</code></pre>
 <div class="sourceCode" id="cb500"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb500-1"><a href="interpretation.html#cb500-1"></a>mod.mlr<span class="op">$</span>learner.model</span></code></pre></div>
 <pre><code>## Ranger result
 ## 
@@ -521,10 +521,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>## Warning: package &#39;ModelMetrics&#39; was built under R version 3.6.3</code></pre>
 <pre><code>## Warning: package &#39;tidyr&#39; was built under R version 3.6.3</code></pre>
 <pre><code>##    user  system elapsed 
-##    1.30    0.11    1.38</code></pre>
+##    1.30    0.21    1.45</code></pre>
 <div class="sourceCode" id="cb535"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb535-1"><a href="interpretation.html#cb535-1"></a><span class="co"># Default plot.</span></span>
 <span id="cb535-2"><a href="interpretation.html#cb535-2"></a>effect2<span class="op">$</span>effects[[<span class="st">&quot;oldpeak&quot;</span>]]<span class="op">$</span><span class="kw">plot</span>()</span></code></pre></div>
-<p><img src="data-science-in-r_files/figure-html/ale_plot-1.png" width="672" /></p>
+<p><img src="predictive-modeling-in-r_files/figure-html/ale_plot-1.png" width="672" /></p>
 <div class="sourceCode" id="cb536"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb536-1"><a href="interpretation.html#cb536-1"></a><span class="co"># Improved plot</span></span>
 <span id="cb536-2"><a href="interpretation.html#cb536-2"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: move into ck37r</span></span>
 <span id="cb536-3"><a href="interpretation.html#cb536-3"></a>plot_ale =<span class="st"> </span><span class="cf">function</span>(var, var_display) {</span>
@@ -567,7 +567,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb536-40"><a href="interpretation.html#cb536-40"></a></span>
 <span id="cb536-41"><a href="interpretation.html#cb536-41"></a></span>
 <span id="cb536-42"><a href="interpretation.html#cb536-42"></a><span class="kw">plot_ale</span>(<span class="st">&quot;oldpeak&quot;</span>, <span class="st">&quot;Old peak&quot;</span>)</span></code></pre></div>
-<p><img src="data-science-in-r_files/figure-html/ale_plot-2.png" width="672" /></p>
+<p><img src="predictive-modeling-in-r_files/figure-html/ale_plot-2.png" width="672" /></p>
 
 </div>
 </div>

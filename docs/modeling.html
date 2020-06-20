@@ -4,26 +4,26 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 Modeling | Data science in R</title>
+  <title>Chapter 6 Modeling | Predictive modeling in R</title>
   <meta name="description" content="An applied tutorial" />
   <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 Modeling | Data science in R" />
+  <meta property="og:title" content="Chapter 6 Modeling | Predictive modeling in R" />
   <meta property="og:type" content="book" />
   
   
   <meta property="og:description" content="An applied tutorial" />
-  <meta name="github-repo" content="ck37/Data-Science-R" />
+  <meta name="github-repo" content="ck37/Predicive-Modeling-in-R" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 Modeling | Data science in R" />
+  <meta name="twitter:title" content="Chapter 6 Modeling | Predictive modeling in R" />
   
   <meta name="twitter:description" content="An applied tutorial" />
   
 
 
 
-<meta name="date" content="2020-06-11" />
+<meta name="date" content="2020-06-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -224,7 +224,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Data science in R</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Predictive modeling in R</a>
           </h1>
         </div>
 
@@ -267,7 +267,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb257-22"><a href="modeling.html#cb257-22"></a>                      <span class="dt">min.node.size =</span> 5L)</span>
 <span id="cb257-23"><a href="modeling.html#cb257-23"></a>}))</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##    2.09    0.14    0.81</code></pre>
+##    2.19    0.12    0.90</code></pre>
 <div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="modeling.html#cb259-1"></a><span class="kw">save</span>(rf, <span class="dt">file =</span> <span class="st">&quot;data/model-rf.RData&quot;</span>)</span></code></pre></div>
 <div id="rf-convergence-plot" class="section level3">
 <h3><span class="header-section-number">6.1.1</span> RF convergence plot</h3>
@@ -292,7 +292,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb260-18"><a href="modeling.html#cb260-18"></a>                     <span class="dt">data =</span> oob_data)</span>
 <span id="cb260-19"><a href="modeling.html#cb260-19"></a>})</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##    9.80    0.11   10.18</code></pre>
+##   10.67    0.17   10.98</code></pre>
 <div class="sourceCode" id="cb262"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb262-1"><a href="modeling.html#cb262-1"></a><span class="co"># Look at the OOB AUC with the maximum number of trees.</span></span>
 <span id="cb262-2"><a href="modeling.html#cb262-2"></a><span class="co"># 0.894</span></span>
 <span id="cb262-3"><a href="modeling.html#cb262-3"></a>(<span class="dt">rf_auc =</span> results<span class="op">$</span>auc[<span class="kw">length</span>(results<span class="op">$</span>auc)])</span></code></pre></div>
@@ -311,7 +311,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb264-12"><a href="modeling.html#cb264-12"></a>                <span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4000</span>),</span>
 <span id="cb264-13"><a href="modeling.html#cb264-13"></a>                <span class="dt">minor_breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span></span>
 <span id="cb264-14"><a href="modeling.html#cb264-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Trees in the random forest&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Out of Bag AUC&quot;</span>)</span></code></pre></div>
-<p><img src="data-science-in-r_files/figure-html/rf_oob_curve-1.png" width="672" /></p>
+<p><img src="predictive-modeling-in-r_files/figure-html/rf_oob_curve-1.png" width="672" /></p>
 <div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="modeling.html#cb265-1"></a><span class="kw">ggsave</span>(<span class="st">&quot;visuals/rf-error-rate-by-trees.pdf&quot;</span>,</span>
 <span id="cb265-2"><a href="modeling.html#cb265-2"></a>       <span class="dt">width =</span> <span class="dv">7</span>, <span class="dt">height =</span> <span class="dv">3</span>)</span></code></pre></div>
 </div>
@@ -839,7 +839,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb325-7"><a href="modeling.html#cb325-7"></a>      <span class="dt">file =</span> <span class="st">&quot;tables/sl-auc_table.tex&quot;</span>)</span>
 <span id="cb325-8"><a href="modeling.html#cb325-8"></a></span>
 <span id="cb325-9"><a href="modeling.html#cb325-9"></a>ck37r<span class="op">::</span><span class="kw">plot_roc</span>(sl, <span class="dt">y =</span> data[[vars<span class="op">$</span>outcomes[<span class="dv">1</span>]]])</span></code></pre></div>
-<p><img src="data-science-in-r_files/figure-html/review_sl-1.png" width="672" /></p>
+<p><img src="predictive-modeling-in-r_files/figure-html/review_sl-1.png" width="672" /></p>
 <div class="sourceCode" id="cb326"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb326-1"><a href="modeling.html#cb326-1"></a><span class="kw">ggsave</span>(<span class="st">&quot;visuals/roc-superlearner.pdf&quot;</span>)</span></code></pre></div>
 <pre><code>## Saving 7 x 5 in image</code></pre>
 <div class="sourceCode" id="cb328"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb328-1"><a href="modeling.html#cb328-1"></a>plot_table =<span class="st"> </span><span class="cf">function</span>(x,</span>
@@ -871,7 +871,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb328-27"><a href="modeling.html#cb328-27"></a></span>
 <span id="cb328-28"><a href="modeling.html#cb328-28"></a><span class="co"># Skip SL.mean - it&#39;s too low to be worth plotting.</span></span>
 <span id="cb328-29"><a href="modeling.html#cb328-29"></a><span class="kw">plot_table</span>(auc_tab[<span class="op">-</span><span class="dv">1</span>, ]) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Cross-validated ROC-AUC&quot;</span>)</span></code></pre></div>
-<p><img src="data-science-in-r_files/figure-html/review_sl-2.png" width="672" /></p>
+<p><img src="predictive-modeling-in-r_files/figure-html/review_sl-2.png" width="672" /></p>
 <div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb329-1"><a href="modeling.html#cb329-1"></a><span class="kw">ggsave</span>(<span class="st">&quot;visuals/sl-roc-auc-comparison.pdf&quot;</span>)</span></code></pre></div>
 <pre><code>## Saving 7 x 5 in image</code></pre>
 </div>
@@ -1565,11 +1565,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb457-3"><a href="modeling.html#cb457-3"></a></span>
 <span id="cb457-4"><a href="modeling.html#cb457-4"></a><span class="co"># Skip SL.mean - it&#39;s too low to be worth plotting.</span></span>
 <span id="cb457-5"><a href="modeling.html#cb457-5"></a><span class="kw">plot_table</span>(auc_tab2[<span class="op">-</span><span class="dv">1</span>, ]) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Cross-validated ROC-AUC&quot;</span>)</span></code></pre></div>
-<p><img src="data-science-in-r_files/figure-html/cvsl_auc-1.png" width="672" /></p>
+<p><img src="predictive-modeling-in-r_files/figure-html/cvsl_auc-1.png" width="672" /></p>
 <div class="sourceCode" id="cb458"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb458-1"><a href="modeling.html#cb458-1"></a><span class="kw">ggsave</span>(<span class="st">&quot;visuals/cvsl-roc-auc-comparison.pdf&quot;</span>)</span></code></pre></div>
 <pre><code>## Saving 7 x 5 in image</code></pre>
 <div class="sourceCode" id="cb460"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb460-1"><a href="modeling.html#cb460-1"></a><span class="kw">plot_roc</span>(cvsl)</span></code></pre></div>
-<p><img src="data-science-in-r_files/figure-html/cvsl_auc-2.png" width="672" /></p>
+<p><img src="predictive-modeling-in-r_files/figure-html/cvsl_auc-2.png" width="672" /></p>
 <div class="sourceCode" id="cb461"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb461-1"><a href="modeling.html#cb461-1"></a><span class="kw">ggsave</span>(<span class="st">&quot;visuals/cvsl-roc.pdf&quot;</span>)</span></code></pre></div>
 <pre><code>## Saving 7 x 5 in image</code></pre>
 <div class="sourceCode" id="cb463"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb463-1"><a href="modeling.html#cb463-1"></a><span class="kw">names</span>(auc_tab2)</span></code></pre></div>
@@ -1622,7 +1622,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 12   SL.dbarts_200_All 0.9229947 0.014703303 0.8941762 0.9518131
 ## 13          DiscreteSL 0.9229947 0.014703303 0.8941762 0.9518131</code></pre>
 <div class="sourceCode" id="cb470"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb470-1"><a href="modeling.html#cb470-1"></a><span class="kw">plot_table</span>(prauc_tab, <span class="dt">metric =</span> <span class="st">&quot;prauc&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Cross-validated PR-AUC&quot;</span>)</span></code></pre></div>
-<p><img src="data-science-in-r_files/figure-html/cvsl_prauc-1.png" width="672" /></p>
+<p><img src="predictive-modeling-in-r_files/figure-html/cvsl_prauc-1.png" width="672" /></p>
 <div class="sourceCode" id="cb471"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb471-1"><a href="modeling.html#cb471-1"></a><span class="kw">ggsave</span>(<span class="st">&quot;visuals/cvsl-prauc-comparison.pdf&quot;</span>)</span></code></pre></div>
 <pre><code>## Saving 7 x 5 in image</code></pre>
 <div class="sourceCode" id="cb473"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb473-1"><a href="modeling.html#cb473-1"></a><span class="co">################</span></span>
@@ -1719,7 +1719,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb477-8"><a href="modeling.html#cb477-8"></a>        <span class="dt">legend.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="kw">alpha</span>(<span class="st">&quot;gray95&quot;</span>, <span class="fl">0.8</span>),</span>
 <span id="cb477-9"><a href="modeling.html#cb477-9"></a>                                         <span class="dt">color =</span> <span class="st">&quot;gray80&quot;</span>),</span>
 <span id="cb477-10"><a href="modeling.html#cb477-10"></a>        <span class="dt">legend.key =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
-<p><img src="data-science-in-r_files/figure-html/cvsl_prauc-2.png" width="672" /></p>
+<p><img src="predictive-modeling-in-r_files/figure-html/cvsl_prauc-2.png" width="672" /></p>
 <div class="sourceCode" id="cb478"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb478-1"><a href="modeling.html#cb478-1"></a><span class="kw">ggsave</span>(<span class="st">&quot;visuals/prc-comparison.pdf&quot;</span>,</span>
 <span id="cb478-2"><a href="modeling.html#cb478-2"></a>       <span class="dt">width =</span> <span class="dv">4</span>, <span class="dt">height =</span> <span class="dv">4</span>)</span>
 <span id="cb478-3"><a href="modeling.html#cb478-3"></a></span>

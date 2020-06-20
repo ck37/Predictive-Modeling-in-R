@@ -1,5 +1,5 @@
 --- 
-title: "Data science in R"
+title: "Predictive modeling in R"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
@@ -7,7 +7,7 @@ documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-github-repo: ck37/Data-Science-R
+github-repo: ck37/Predicive-Modeling-in-R
 description: "An applied tutorial"
 ---
 
